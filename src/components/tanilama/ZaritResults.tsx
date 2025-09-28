@@ -25,7 +25,7 @@ export default function ZaritResults({ results, onRestart }: ZaritResultsProps) 
   const [isPrinting, setIsPrinting] = React.useState(false);
 
   const handlePrint = useReactToPrint({
-    content: () => printRef.current,
+    contentRef: printRef,
     documentTitle: `Bakım Yükü Değerlendirmesi - ${new Date().toLocaleDateString('tr-TR')}`,
     onBeforePrint: () => {
       console.log('PDF hazırlanıyor...');
