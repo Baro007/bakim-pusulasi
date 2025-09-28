@@ -23,6 +23,10 @@ export const metadata: Metadata = {
   },
 };
 
+// Static export optimization
+export const dynamic = 'force-static';
+export const dynamicParams = false;
+
 export default function RootLayout({
   children,
 }: Readonly<{

@@ -1,6 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
+
+// Static export optimization
+export const dynamic = 'force-static';
 import { motion } from 'framer-motion';
 import { 
   WrenchScrewdriverIcon,

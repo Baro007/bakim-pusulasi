@@ -41,7 +41,6 @@ export default function ZaritResults({ results, onRestart }: ZaritResultsProps) 
       setIsPrinting(false);
       alert('PDF oluştururken bir hata oluştu. Lütfen tarayıcınızın pop-up engellemesini kontrol edin.');
     },
-    removeAfterPrint: false,
     suppressErrors: false,
     pageStyle: `
       @page {

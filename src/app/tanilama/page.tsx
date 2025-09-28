@@ -1,6 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
+
+// Static export optimization
+export const dynamic = 'force-static';
 import { motion } from 'framer-motion';
 import { ClipboardDocumentListIcon, HeartIcon } from '@heroicons/react/24/outline';
 import ZaritForm from '@/components/tanilama/ZaritForm';

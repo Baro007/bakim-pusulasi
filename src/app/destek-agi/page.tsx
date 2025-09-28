@@ -1,6 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
+
+// Static export optimization
+export const dynamic = 'force-static';
 import { motion } from 'framer-motion';
 import { 
   UserGroupIcon, 
@@ -225,11 +228,11 @@ export default function DestekAgiPage() {
             <div className="text-center">
               <HeartIcon className="w-12 h-12 text-teal-600 mx-auto mb-4" />
               <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-                Proaktif "Nasılsınız?" Modeli
+                Proaktif &ldquo;Nasılsınız?&rdquo; Modeli
               </h2>
               <p className="text-gray-600 max-w-3xl mx-auto leading-relaxed mb-6">
-                Geleneksel yaklaşım "bir sorun olduğunda arayın" der. Bizim yaklaşımımız farklı: 
-                "Nasılsınız?" sorusunu düzenli olarak sorarak, sorunlar büyümeden önce destek sağlamak.
+                Geleneksel yaklaşım &ldquo;bir sorun olduğunda arayın&rdquo; der. Bizim yaklaşımımız farklı: 
+                &ldquo;Nasılsınız?&rdquo; sorusunu düzenli olarak sorarak, sorunlar büyümeden önce destek sağlamak.
               </p>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
@@ -238,7 +241,7 @@ export default function DestekAgiPage() {
                     <span className="text-teal-600 font-bold">1</span>
                   </div>
                   <h3 className="font-semibold text-gray-800 mb-2">Düzenli İletişim</h3>
-                  <p className="text-gray-600 text-sm">Haftalık/aylık "nasılsınız?" kontrolü</p>
+                  <p className="text-gray-600 text-sm">Haftalık/aylık &ldquo;nasılsınız?&rdquo; kontrolü</p>
                 </div>
                 <div className="text-center">
                   <div className="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-3">
