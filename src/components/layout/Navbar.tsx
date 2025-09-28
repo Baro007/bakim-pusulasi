@@ -15,6 +15,7 @@ export default function Navbar() {
     { name: 'Tanılama', href: '/tanilama' },
     { name: 'Araç Kiti', href: '/arac-kiti' },
     { name: 'Destek Ağı', href: '/destek-agi' },
+    { name: 'Analytics', href: '/analytics' },
   ];
 
   return (
