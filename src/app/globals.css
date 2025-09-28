@@ -1,0 +1,214 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --background: #F9FAFB;
+  --foreground: #1F2937;
+  --secondary-text: #6B7280;
+  --accent: #F59E0B;
+  --calm-green: #0D9488;
+  --border: #E5E7EB;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-secondary: var(--secondary-text);
+  --color-accent: var(--accent);
+  --color-calm-green: var(--calm-green);
+  --color-border: var(--border);
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Focus styles for accessibility */
+:focus {
+  outline: 2px solid var(--calm-green);
+  outline-offset: 2px;
+}
+
+/* Button focus styles */
+button:focus {
+  outline: 2px solid var(--calm-green);
+  outline-offset: 2px;
+}
+
+/* Presentation Mode Styles */
+.presentation-mode {
+  background: #000 !important;
+  color: #fff !important;
+}
+
+.presentation-mode .bg-gray-50 {
+  background: #111 !important;
+}
+
+.presentation-mode .bg-white {
+  background: #1a1a1a !important;
+  border-color: #333 !important;
+  color: #fff !important;
+}
+
+.presentation-mode .text-gray-800 {
+  color: #fff !important;
+}
+
+.presentation-mode .text-gray-600 {
+  color: #ccc !important;
+}
+
+.presentation-mode .text-gray-500 {
+  color: #999 !important;
+}
+
+/* Smooth transitions for presentation mode */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Print Styles */
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  @page {
+    size: A4;
+    margin: 2cm;
+  }
+  
+  body {
+    font-family: 'Inter', Arial, sans-serif !important;
+    font-size: 12pt !important;
+    line-height: 1.4 !important;
+    color: black !important;
+    background: white !important;
+  }
+  
+  .print\:hidden {
+    display: none !important;
+  }
+  
+  .print\:block {
+    display: block !important;
+  }
+  
+  h1 {
+    font-size: 24pt !important;
+    font-weight: bold !important;
+    color: black !important;
+    margin-bottom: 12pt !important;
+    page-break-after: avoid !important;
+  }
+  
+  h2 {
+    font-size: 18pt !important;
+    font-weight: bold !important;
+    color: black !important;
+    margin-bottom: 10pt !important;
+    page-break-after: avoid !important;
+  }
+  
+  h3 {
+    font-size: 14pt !important;
+    font-weight: bold !important;
+    color: black !important;
+    margin-bottom: 8pt !important;
+    page-break-after: avoid !important;
+  }
+  
+  p {
+    font-size: 11pt !important;
+    line-height: 1.4 !important;
+    margin-bottom: 8pt !important;
+    color: black !important;
+  }
+  
+  .bg-white {
+    background: white !important;
+    border: 1px solid #ccc !important;
+  }
+  
+  .bg-gray-50 {
+    background: #f9f9f9 !important;
+  }
+  
+  .text-gray-800,
+  .text-gray-700 {
+    color: black !important;
+  }
+  
+  .text-gray-600 {
+    color: #333 !important;
+  }
+  
+  .text-gray-500 {
+    color: #666 !important;
+  }
+  
+  .text-teal-600 {
+    color: #0d9488 !important;
+    font-weight: bold !important;
+  }
+  
+  .text-amber-600 {
+    color: #d97706 !important;
+    font-weight: bold !important;
+  }
+  
+  .text-red-600 {
+    color: #dc2626 !important;
+    font-weight: bold !important;
+  }
+  
+  .text-green-600 {
+    color: #16a34a !important;
+    font-weight: bold !important;
+  }
+  
+  .bg-teal-100 {
+    background: #e6fffa !important;
+    border: 1px solid #0d9488 !important;
+  }
+  
+  .bg-amber-50 {
+    background: #fffbeb !important;
+    border: 1px solid #d97706 !important;
+  }
+  
+  .border {
+    border: 1px solid #ccc !important;
+  }
+  
+  .rounded-xl,
+  .rounded-lg {
+    border-radius: 8pt !important;
+  }
+  
+  .shadow-sm {
+    box-shadow: none !important;
+  }
+  
+  ul {
+    margin-left: 20pt !important;
+  }
+  
+  li {
+    margin-bottom: 4pt !important;
+  }
+}
