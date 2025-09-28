@@ -1,0 +1,10 @@
+# SPA fallback for client-side routing
+/*    /index.html   200
+
+# API redirects if needed in future
+/api/*  /.netlify/functions/:splat  200
+
+# Security redirects
+/admin/*  /  301
+/.env*  /  301
+/config/*  /  301

@@ -1,9 +1,6 @@
 'use client';
 
 import React from 'react';
-
-// Static export optimization
-export const dynamic = 'force-static';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { 

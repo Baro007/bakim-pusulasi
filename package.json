@@ -4,11 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && next export",
-    "build:netlify": "next build",
+    "build": "next build",
+    "build:debug": "next build --debug",
     "start": "next start",
     "lint": "eslint",
-    "postbuild": "next-sitemap --config next-sitemap.config.js"
+    "clean": "rm -rf .next out",
+    "prebuild": "npm run clean"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
