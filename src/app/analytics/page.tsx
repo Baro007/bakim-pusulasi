@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
   ChartBarIcon, 
-  UsersIcon, 
   GlobeAltIcon,
   DocumentChartBarIcon,
   PresentationChartBarIcon
@@ -13,7 +12,6 @@ import { useAnalytics } from '@/lib/analytics-context';
 import { usePresentationMode } from '@/lib/presentation-context';
 import LiveMetricsPanel from '@/components/analytics/LiveMetricsPanel';
 import ZBIAnalyticsCharts from '@/components/analytics/ZBIAnalyticsCharts';
-import UserBehaviorCharts from '@/components/analytics/UserBehaviorCharts';
 import GeographicVisualization from '@/components/analytics/GeographicVisualization';
 import ResearchInsights from '@/components/analytics/ResearchInsights';
 
@@ -47,33 +45,27 @@ export default function AnalyticsPage() {
   const tabs = [
     {
       id: 'overview',
-      name: 'Genel Bakış',
+      name: 'Canlı Metrikler',
       icon: ChartBarIcon,
-      description: 'Canlı metriklerin ve genel istatistiklerin özeti'
+      description: 'Real-time platform istatistikleri ve kongre metrikleri'
     },
     {
       id: 'zbi',
-      name: 'ZBI Analitik',
+      name: 'ZBI İstatistikleri',
       icon: DocumentChartBarIcon,
-      description: 'Zarit değerlendirme sonuçları ve soru analizleri'
-    },
-    {
-      id: 'behavior',
-      name: 'Kullanıcı Davranışı',
-      icon: UsersIcon,
-      description: 'Kullanıcı yolculukları ve etkileşim desenleri'
+      description: 'Zarit değerlendirme sonuçları ve psikometrik analiz'
     },
     {
       id: 'geographic',
-      name: 'Coğrafi Analiz',
+      name: 'Global Etki',
       icon: GlobeAltIcon,
-      description: 'Dünya çapında kullanım ve kültürler arası veriler'
+      description: 'Uluslararası kullanım ve kültürler arası validasyon'
     },
     {
       id: 'research',
-      name: 'Araştırma İçgörüleri',
+      name: 'Akademik Araştırma',
       icon: PresentationChartBarIcon,
-      description: 'Akademik yayın ve kongre sunumu destekleri'
+      description: 'Yayın fırsatları, istatistiksel analiz ve veri dışa aktarım'
     }
   ];
 
@@ -249,12 +241,6 @@ export default function AnalyticsPage() {
                 />
               )}
               
-              {activeTab === 'behavior' && (
-                <UserBehaviorCharts 
-                  analyticsData={analyticsData}
-                  isPresentationMode={isPresentationMode}
-                />
-              )}
               
               {activeTab === 'geographic' && (
                 <GeographicVisualization 
