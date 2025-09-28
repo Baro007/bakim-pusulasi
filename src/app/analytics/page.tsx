@@ -21,7 +21,7 @@ export const dynamic = 'force-static';
 export default function AnalyticsPage() {
   const analytics = useAnalytics();
   const { isPresentationMode } = usePresentationMode();
-  const [activeTab, setActiveTab] = useState<string>('overview');
+  const [activeTab, setActiveTab] = useState<string>('research');
   const [autoRefresh, setAutoRefresh] = useState<boolean>(true);
   const [refreshInterval] = useState<number>(30); // seconds
 
@@ -42,30 +42,42 @@ export default function AnalyticsPage() {
     analytics.trackPageVisit('analytics_dashboard');
   }, [analytics]);
 
-  const tabs = [
+  interface TabData {
+    id: string;
+    name: string;
+    icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+    description: string;
+    isReal: boolean;
+  }
+
+  const tabs: TabData[] = [
     {
-      id: 'overview',
-      name: 'Canlı Metrikler',
-      icon: ChartBarIcon,
-      description: 'Real-time platform istatistikleri ve kongre metrikleri'
+      id: 'research',
+      name: 'Araştırma Sonuçları',
+      icon: PresentationChartBarIcon,
+      description: 'Gerçek psikometrik veriler ve akademik bulgular',
+      isReal: true
     },
     {
       id: 'zbi',
-      name: 'ZBI İstatistikleri',
+      name: 'ZBI Dağılımları',
       icon: DocumentChartBarIcon,
-      description: 'Zarit değerlendirme sonuçları ve psikometrik analiz'
+      description: 'Skor analizi ve istatistiksel görselleştirmeler',
+      isReal: true
+    },
+    {
+      id: 'overview',
+      name: 'Platform Örnekleri',
+      icon: ChartBarIcon,
+      description: 'ÖRNEK VERİ - Demo amaçlı metrikler',
+      isReal: false
     },
     {
       id: 'geographic',
-      name: 'Global Etki',
+      name: 'Global Örnekler',
       icon: GlobeAltIcon,
-      description: 'Uluslararası kullanım ve kültürler arası validasyon'
-    },
-    {
-      id: 'research',
-      name: 'Akademik Araştırma',
-      icon: PresentationChartBarIcon,
-      description: 'Yayın fırsatları, istatistiksel analiz ve veri dışa aktarım'
+      description: 'ÖRNEK VERİ - Uluslararası potansiyel gösterimi',
+      isReal: false
     }
   ];
 
@@ -195,24 +207,52 @@ export default function AnalyticsPage() {
                 const isActive = activeTab === tab.id;
                 
                 return (
-                  <button
+                  <motion.button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
                     className={`
-                      flex items-center space-x-2 px-4 py-3 rounded-lg font-medium transition-all duration-200
+                      relative flex items-center space-x-2 px-4 py-3 rounded-lg font-medium transition-all duration-300
                       ${isActive
                         ? isPresentationMode
                           ? 'bg-white text-purple-900 shadow-lg'
-                          : 'bg-white text-teal-600 shadow-lg'
+                          : tab.isReal 
+                            ? 'bg-gradient-to-r from-green-600 to-teal-600 text-white shadow-lg'
+                            : 'bg-gradient-to-r from-gray-600 to-slate-600 text-white shadow-lg'
                         : isPresentationMode
                           ? 'bg-white bg-opacity-10 text-white hover:bg-opacity-20'
-                          : 'bg-white text-gray-600 hover:text-teal-600 hover:shadow-md'
+                          : tab.isReal
+                            ? 'bg-white text-green-700 hover:text-green-800 hover:shadow-md border-2 border-green-200'
+                            : 'bg-white text-gray-600 hover:text-gray-700 hover:shadow-md border-2 border-gray-200'
                       }
                     `}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                   >
                     <Icon className="w-5 h-5" />
-                    <span>{tab.name}</span>
-                  </button>
+                    <div className="flex flex-col items-start">
+                      <span className="text-sm font-semibold">{tab.name}</span>
+                      {!tab.isReal && (
+                        <span className="text-xs opacity-75 font-medium">
+                          ÖRNEK VERİ
+                        </span>
+                      )}
+                      {tab.isReal && (
+                        <span className="text-xs opacity-75 font-medium">
+                          GERÇEKVERİ
+                        </span>
+                      )}
+                    </div>
+                    
+                    {/* Real data indicator */}
+                    {tab.isReal && (
+                      <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-pulse" />
+                    )}
+                    
+                    {/* Example data indicator */}
+                    {!tab.isReal && (
+                      <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-500 rounded-full" />
+                    )}
+                  </motion.button>
                 );
               })}
             </motion.div>
@@ -220,6 +260,35 @@ export default function AnalyticsPage() {
 
           {/* Tab Content */}
           <div className="max-w-7xl mx-auto px-4 pb-12">
+            {/* Example Data Warning */}
+            {tabs.find(t => t.id === activeTab)?.isReal === false && (
+              <motion.div
+                className={`
+                  mb-6 rounded-xl p-4 border-2 border-yellow-400
+                  ${isPresentationMode 
+                    ? 'bg-yellow-100 bg-opacity-20 text-yellow-200' 
+                    : 'bg-yellow-50 text-yellow-800'
+                  }
+                `}
+                variants={fadeInUp}
+                initial="initial"
+                animate="animate"
+              >
+                <div className="flex items-center space-x-3">
+                  <div className="w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center">
+                    <span className="text-white text-sm font-bold">!</span>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-lg">⚠️ ÖRNEK VERİ UYARISI</h4>
+                    <p className="text-sm">
+                      Bu bölümdeki veriler demonstration amaçlı örnek verilerdir. 
+                      Gerçek araştırma verileri için &ldquo;Araştırma Sonuçları&rdquo; sekmesini kullanın.
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
             <motion.div
               key={activeTab}
               variants={fadeInUp}
