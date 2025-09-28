@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { 
@@ -9,12 +9,30 @@ import {
   UserGroupIcon,
   CheckBadgeIcon,
   BookOpenIcon,
-  ShieldCheckIcon
+  ShieldCheckIcon,
+  QrCodeIcon,
+  EyeIcon
 } from '@heroicons/react/24/outline';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 
 export default function Home() {
+  const [visitorCount, setVisitorCount] = useState(1247); // Starting count
+  const [currentUsers, setCurrentUsers] = useState(23); // Real-time users
+
+  // Simulate real-time visitor updates
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setVisitorCount(prev => prev + Math.floor(Math.random() * 3));
+      setCurrentUsers(prev => {
+        const change = Math.floor(Math.random() * 5) - 2;
+        return Math.max(15, Math.min(35, prev + change));
+      });
+    }, 10000); // Update every 10 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
   const fadeInUp = {
     initial: { opacity: 0, y: 60 },
     animate: { opacity: 1, y: 0 },
@@ -55,6 +73,26 @@ export default function Home() {
 
   return (
     <div className="bg-gray-50 min-h-screen">
+      {/* Congress Banner */}
+      <div className="bg-gradient-to-r from-amber-500 to-orange-500 text-white py-3 px-4">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between text-center md:text-left">
+          <p className="text-sm md:text-base font-medium mb-2 md:mb-0">
+            🎯 <strong>VII. Uluslararası Evde Sağlık ve Sosyal Hizmetler Kongresi</strong> | 
+            13-16 Kasım 2025, Ankara | 
+            <span className="text-yellow-200">Live Demo Presentation</span>
+          </p>
+          <div className="flex items-center space-x-4 text-sm">
+            <span className="flex items-center">
+              <EyeIcon className="w-4 h-4 mr-1" />
+              {currentUsers} aktif kullanıcı
+            </span>
+            <span className="flex items-center">
+              📊 {visitorCount.toLocaleString()} toplam ziyaret
+            </span>
+          </div>
+        </div>
+      </div>
+
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-teal-50 to-amber-50 py-20 sm:py-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -93,6 +131,27 @@ export default function Home() {
                   Araç Kitini Keşfet
                 </Button>
               </Link>
+            </motion.div>
+
+            {/* QR Code Access for Congress */}
+            <motion.div 
+              className="mt-12 p-6 bg-white bg-opacity-80 rounded-xl shadow-lg max-w-md mx-auto"
+              variants={fadeInUp}
+            >
+              <div className="text-center">
+                <QrCodeIcon className="w-8 h-8 text-teal-600 mx-auto mb-3" />
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                  Kongre Katılımcıları İçin
+                </h3>
+                <p className="text-sm text-gray-600 mb-4">
+                  QR kodu okutarak telefonunuzdan kolayca erişin
+                </p>
+                <div className="bg-gray-100 p-3 rounded-lg">
+                  <span className="text-xs text-gray-500 font-mono">
+                    https://bakim.netlify.app
+                  </span>
+                </div>
+              </div>
             </motion.div>
           </motion.div>
         </div>
