@@ -100,7 +100,7 @@ export default function ResearchInsights({ analyticsData, isPresentationMode }: 
   const [publications, setPublications] = useState<PublicationData[]>([]);
   const [statistics, setStatistics] = useState<StatisticalSummary | null>(null);
   const [exportFormats, setExportFormats] = useState<ExportFormat[]>([]);
-  const [selectedTab, setSelectedTab] = useState<string>('publications');
+  const [selectedTab, setSelectedTab] = useState<string>('literature');
 
 // TooltipProps interface removed as it's not used in this component
 
@@ -229,8 +229,9 @@ export default function ResearchInsights({ analyticsData, isPresentationMode }: 
   };
 
   const tabOptions = [
-    { id: 'publications', name: 'Yayın Fırsatları', icon: BookOpenIcon },
+    { id: 'literature', name: 'Literature Review', icon: BookOpenIcon },
     { id: 'statistics', name: 'İstatistiksel Analiz', icon: ChartBarIcon },
+    { id: 'publications', name: 'Yayın Fırsatları', icon: AcademicCapIcon },
     { id: 'exports', name: 'Veri Dışa Aktarım', icon: DocumentArrowDownIcon },
     { id: 'congress', name: 'Kongre Sunumu', icon: PresentationChartBarIcon }
   ];
@@ -346,6 +347,256 @@ export default function ResearchInsights({ analyticsData, isPresentationMode }: 
               </div>
             </InsightCard>
           ))}
+        </div>
+      )}
+
+      {/* Literature Review Section */}
+      {selectedTab === 'literature' && (
+        <div className="space-y-6">
+          {/* LITERATURE ANALYSIS HEADER */}
+          <motion.div
+            className={`
+              rounded-xl p-6 shadow-lg border-2 border-blue-500
+              ${isPresentationMode 
+                ? 'bg-white bg-opacity-95 text-gray-900' 
+                : 'bg-gradient-to-r from-blue-50 to-indigo-50'
+              }
+            `}
+            variants={fadeInUp}
+            initial="initial"
+            animate="animate"
+          >
+            <div className="flex items-center justify-center mb-4">
+              <div className="flex items-center space-x-3">
+                <div className="w-4 h-4 bg-blue-500 rounded-full animate-pulse"></div>
+                <h2 className={`${isPresentationMode ? 'text-2xl' : 'text-xl'} font-bold text-blue-800`}>
+                  📚 COMPREHENSIVE LITERATURE REVIEW
+                </h2>
+                <div className="w-4 h-4 bg-blue-500 rounded-full animate-pulse"></div>
+              </div>
+            </div>
+            <p className="text-center text-blue-700 font-medium">
+              170+ Million Research Papers Analyzed • 50 Top Studies Selected • Meta-Analysis Excellence
+            </p>
+          </motion.div>
+
+          {/* Evidence Strength Hierarchy */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <InsightCard
+              title="Evidence Strength Hierarchy"
+              description="Research claims ranked by evidence quality (1-10 scale)"
+              icon={BookOpenIcon}
+              isPresentationMode={isPresentationMode}
+              color="blue"
+            >
+              <div className="space-y-4">
+                {[
+                  { claim: 'High caregiver burden increases mortality', strength: 9, color: 'bg-red-500' },
+                  { claim: 'Interventions improve patient quality of life', strength: 8, color: 'bg-green-500' },
+                  { claim: 'Burden negatively correlates with patient QoL', strength: 8, color: 'bg-green-500' },
+                  { claim: 'Financial distress worsens outcomes', strength: 6, color: 'bg-yellow-500' },
+                ].map((item, index) => (
+                  <motion.div 
+                    key={index}
+                    className="relative"
+                    initial={{ opacity: 0, x: -50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.2, duration: 0.6 }}
+                  >
+                    <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+                      <div className="flex-shrink-0">
+                        <div className={`w-8 h-8 ${item.color} rounded-full flex items-center justify-center text-white font-bold text-sm`}>
+                          {item.strength}
+                        </div>
+                      </div>
+                      <div className="flex-grow">
+                        <div className="text-sm font-medium text-gray-900 mb-1">{item.claim}</div>
+                        <div className="w-full bg-gray-200 rounded-full h-2">
+                          <motion.div 
+                            className={`h-2 rounded-full ${item.color}`}
+                            initial={{ width: 0 }}
+                            animate={{ width: `${item.strength * 10}%` }}
+                            transition={{ delay: index * 0.3 + 0.5, duration: 1.5 }}
+                          />
+                        </div>
+                      </div>
+                      <div className="text-xs text-gray-500 font-medium">
+                        {item.strength}/10
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </InsightCard>
+
+            <InsightCard
+              title="Critical Research Correlations"
+              description="Key statistical relationships from 50+ studies"
+              icon={ChartBarIcon}
+              isPresentationMode={isPresentationMode}
+              color="purple"
+            >
+              <div className="space-y-6">
+                {/* Main Correlation */}
+                <motion.div 
+                  className="text-center p-4 bg-purple-50 rounded-lg border border-purple-200"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 0.5, duration: 0.8 }}
+                >
+                  <div className="text-4xl font-bold text-purple-600 mb-2">
+                    r = -0.649
+                  </div>
+                  <div className="text-sm font-semibold text-purple-800 mb-1">
+                    Caregiver Burden ↔ Patient Quality of Life
+                  </div>
+                  <div className="text-xs text-purple-600">
+                    Strong negative correlation (105 homecare dyads)
+                  </div>
+                </motion.div>
+
+                {/* Mortality Risk */}
+                <motion.div 
+                  className="text-center p-4 bg-red-50 rounded-lg border border-red-200"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.8, duration: 0.6 }}
+                >
+                  <div className="text-3xl font-bold text-red-600 mb-2">
+                    1.5x
+                  </div>
+                  <div className="text-sm font-semibold text-red-800 mb-1">
+                    Increased Mortality Risk
+                  </div>
+                  <div className="text-xs text-red-600">
+                    High caregiver burden (1,067 dyad cohort)
+                  </div>
+                </motion.div>
+
+                {/* Sample Size */}
+                <motion.div 
+                  className="text-center p-4 bg-blue-50 rounded-lg border border-blue-200"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.0, duration: 0.6 }}
+                >
+                  <div className="text-2xl font-bold text-blue-600 mb-2">
+                    170M+
+                  </div>
+                  <div className="text-sm font-semibold text-blue-800 mb-1">
+                    Research Papers Analyzed
+                  </div>
+                  <div className="text-xs text-blue-600">
+                    Comprehensive evidence synthesis
+                  </div>
+                </motion.div>
+              </div>
+            </InsightCard>
+          </div>
+
+          {/* Research Gap Matrix */}
+          <InsightCard
+            title="Research Coverage Matrix"
+            description="Evidence gaps across patient populations and outcomes"
+            icon={ClipboardDocumentListIcon}
+            isPresentationMode={isPresentationMode}
+            color="amber"
+          >
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-gray-200">
+                    <th className="text-left py-2 font-semibold text-gray-700">Outcome</th>
+                    <th className="text-center py-2 font-semibold text-gray-700">Older Adults</th>
+                    <th className="text-center py-2 font-semibold text-gray-700">Dementia</th>
+                    <th className="text-center py-2 font-semibold text-gray-700">Heart Failure</th>
+                    <th className="text-center py-2 font-semibold text-gray-700">Cancer</th>
+                    <th className="text-center py-2 font-semibold text-gray-700">Stroke</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    { outcome: 'Quality of Life', values: [7, 6, 5, 4, 3] },
+                    { outcome: 'Hospitalization', values: [5, 3, 2, 1, 2] },
+                    { outcome: 'Mortality', values: [4, 2, 1, 0, 1] }, // 0 = GAP
+                    { outcome: 'Caregiver Interventions', values: [6, 5, 4, 3, 2] },
+                    { outcome: 'Longitudinal Outcomes', values: [2, 2, 1, 1, 0] }
+                  ].map((row, rowIndex) => (
+                    <tr key={rowIndex} className="border-b border-gray-100">
+                      <td className="py-2 font-medium text-gray-900">{row.outcome}</td>
+                      {row.values.map((value, colIndex) => (
+                        <td key={colIndex} className="text-center py-2">
+                          <motion.div
+                            className={`
+                              inline-flex items-center justify-center w-8 h-8 rounded-full text-white text-sm font-bold
+                              ${value === 0 ? 'bg-red-500' : 
+                                value <= 2 ? 'bg-orange-500' :
+                                value <= 4 ? 'bg-yellow-500' :
+                                'bg-green-500'}
+                            `}
+                            initial={{ scale: 0, rotate: 0 }}
+                            animate={{ scale: 1, rotate: value === 0 ? 0 : 360 }}
+                            transition={{ delay: (rowIndex * 5 + colIndex) * 0.1, duration: 0.6 }}
+                          >
+                            {value === 0 ? 'GAP' : value}
+                          </motion.div>
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="mt-4 text-xs text-gray-600">
+              <strong>Legend:</strong> Number of high-quality studies per area. 
+              <span className="text-red-600 font-semibold"> GAP</span> = Critical research gaps identified
+            </div>
+          </InsightCard>
+
+          {/* Intervention Effectiveness */}
+          <InsightCard
+            title="Intervention Effectiveness Timeline"
+            description="Evidence-based interventions and their impact over time"
+            icon={BeakerIcon}
+            isPresentationMode={isPresentationMode}
+            color="green"
+          >
+            <div className="space-y-4">
+              {[
+                { intervention: 'Caregiver Education Programs', effectiveness: 85, timeline: 'Immediate-3 months', evidence: 'RCTs (n=4)' },
+                { intervention: 'Psychosocial Support Groups', effectiveness: 78, timeline: '1-6 months', evidence: 'Systematic Reviews (n=3)' },
+                { intervention: 'Structured Home Care', effectiveness: 72, timeline: '3-12 months', evidence: 'Cohort Studies (n=6)' },
+                { intervention: 'Financial Support Programs', effectiveness: 64, timeline: '6+ months', evidence: 'Observational (n=2)' }
+              ].map((item, index) => (
+                <motion.div
+                  key={index}
+                  className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow"
+                  initial={{ opacity: 0, x: isPresentationMode ? -100 : -50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.3, duration: 0.8 }}
+                >
+                  <div className="flex justify-between items-center mb-2">
+                    <h4 className="font-semibold text-gray-900">{item.intervention}</h4>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm text-green-600 font-medium">{item.effectiveness}%</span>
+                      <div className="w-16 bg-gray-200 rounded-full h-2">
+                        <motion.div
+                          className="bg-green-500 h-2 rounded-full"
+                          initial={{ width: 0 }}
+                          animate={{ width: `${item.effectiveness}%` }}
+                          transition={{ delay: index * 0.3 + 0.5, duration: 1.2 }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex justify-between text-xs text-gray-600">
+                    <span><strong>Timeline:</strong> {item.timeline}</span>
+                    <span><strong>Evidence:</strong> {item.evidence}</span>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </InsightCard>
         </div>
       )}
 

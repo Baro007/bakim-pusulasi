@@ -512,6 +512,86 @@ export default function ZBIAnalyticsCharts({ analyticsData, isPresentationMode }
         </div>
       )}
 
+      {/* Literature Evidence Panel */}
+      <motion.div
+        className={`
+          rounded-xl p-6 shadow-lg border-2 border-purple-400
+          ${isPresentationMode 
+            ? 'bg-white bg-opacity-95 text-gray-900' 
+            : 'bg-gradient-to-r from-purple-50 to-indigo-50'
+          }
+        `}
+        variants={fadeInUp}
+        initial="initial"
+        animate="animate"
+      >
+        <h3 className={`${isPresentationMode ? 'text-xl' : 'text-lg'} font-bold text-purple-800 mb-4`}>
+          📚 Literature Review Evidence
+        </h3>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <motion.div 
+            className="text-center p-4 bg-red-50 rounded-lg border border-red-200"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.3, duration: 0.6 }}
+          >
+            <div className="text-3xl font-bold text-red-600 mb-2">
+              r = -0.649
+            </div>
+            <div className="text-sm font-semibold text-red-800 mb-1">
+              Caregiver Burden ↔ Patient QoL
+            </div>
+            <div className="text-xs text-red-600">
+              Strong negative correlation
+            </div>
+          </motion.div>
+
+          <motion.div 
+            className="text-center p-4 bg-orange-50 rounded-lg border border-orange-200"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.5, duration: 0.6 }}
+          >
+            <div className="text-3xl font-bold text-orange-600 mb-2">
+              1.5x
+            </div>
+            <div className="text-sm font-semibold text-orange-800 mb-1">
+              Mortality Risk Increase
+            </div>
+            <div className="text-xs text-orange-600">
+              High burden (1,067 cohort)
+            </div>
+          </motion.div>
+
+          <motion.div 
+            className="text-center p-4 bg-green-50 rounded-lg border border-green-200"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.7, duration: 0.6 }}
+          >
+            <div className="text-3xl font-bold text-green-600 mb-2">
+              85%
+            </div>
+            <div className="text-sm font-semibold text-green-800 mb-1">
+              Intervention Effectiveness
+            </div>
+            <div className="text-xs text-green-600">
+              Education programs (RCTs)
+            </div>
+          </motion.div>
+        </div>
+
+        <div className="mt-4 text-center">
+          <div className="inline-flex items-center px-3 py-1 bg-purple-100 rounded-full">
+            <div className="w-2 h-2 bg-purple-500 rounded-full mr-2 animate-pulse"></div>
+            <span className="text-sm text-purple-700 font-medium">
+              Evidence from 170M+ research papers analyzed
+            </span>
+          </div>
+        </div>
+      </motion.div>
+
       {/* Statistical Summary */}
       {scoreDistribution.length > 0 && (
         <motion.div
