@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { PresentationProvider } from "@/lib/presentation-context";
+import { AnalyticsProvider } from "@/lib/analytics-context";
 import PresentationLayout from "@/components/layout/PresentationLayout";
 
 const inter = Inter({
@@ -36,15 +37,17 @@ export default function RootLayout({
     <html lang="tr" className={inter.variable}>
       <body className="font-sans antialiased">
         <PresentationProvider>
-          <PresentationLayout>
-            <div className="min-h-screen flex flex-col">
-              <Navbar />
-              <main className="flex-grow">
-                {children}
-              </main>
-              <Footer />
-            </div>
-          </PresentationLayout>
+          <AnalyticsProvider>
+            <PresentationLayout>
+              <div className="min-h-screen flex flex-col">
+                <Navbar />
+                <main className="flex-grow">
+                  {children}
+                </main>
+                <Footer />
+              </div>
+            </PresentationLayout>
+          </AnalyticsProvider>
         </PresentationProvider>
       </body>
     </html>

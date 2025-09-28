@@ -1,10 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { zaritQuestions, calculateZaritScore, ZaritResult } from '@/lib/zarit-questions';
 import Button from '@/components/ui/Button';
+import { useAnalytics } from '@/lib/analytics-context';
+import ConsentModal from '@/components/research/ConsentModal';
 
 interface ZaritFormProps {
   onComplete: (results: ZaritResult) => void;
@@ -14,11 +16,59 @@ export default function ZaritForm({ onComplete }: ZaritFormProps) {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<number[]>(new Array(zaritQuestions.length).fill(-1));
   const [isAnimating, setIsAnimating] = useState(false);
+  const [questionStartTime, setQuestionStartTime] = useState<Date>(new Date());
+  const [visitedQuestions, setVisitedQuestions] = useState<Set<number>>(new Set([0]));
+
+  // Analytics hooks
+  const analytics = useAnalytics();
+
+  // Initialize assessment session and show consent modal if needed
+  useEffect(() => {
+    // Show consent modal if user hasn't decided yet
+    if (analytics.hasResearchConsent === null) {
+      analytics.setShowConsentModal(true);
+    }
+
+    // Start assessment session
+    analytics.startAssessmentSession({
+      language: 'tr',
+      referralSource: document.referrer || 'direct'
+    });
+    setQuestionStartTime(new Date());
+
+    // Track page visit
+    analytics.trackPageVisit('assessment_form');
+
+    return () => {
+      // Clean up if component unmounts before completion
+      const currentSession = analytics.getSessionData();
+      if (currentSession && !currentSession.metadata.isCompleted) {
+        analytics.trackUserJourney({
+          exitPoint: `question_${currentQuestion}`,
+          navigationPattern: Array.from(visitedQuestions).map(q => `question_${q}`)
+        });
+      }
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleAnswerSelect = (value: number) => {
     const newAnswers = [...answers];
+    const wasAlreadyAnswered = newAnswers[currentQuestion] !== -1;
     newAnswers[currentQuestion] = value;
     setAnswers(newAnswers);
+
+    // Track question response analytics
+    if (analytics.hasResearchConsent) {
+      const responseTime = Date.now() - questionStartTime.getTime();
+      analytics.trackQuestionResponse({
+        questionId: currentQuestion + 1,
+        response: value,
+        responseTime: Math.round(responseTime / 1000), // Convert to seconds
+        revisited: wasAlreadyAnswered,
+        skipped: false,
+        timestamp: new Date()
+      });
+    }
     
     // Auto-advance to next question after selection
     if (currentQuestion < zaritQuestions.length - 1) {
@@ -32,8 +82,14 @@ export default function ZaritForm({ onComplete }: ZaritFormProps) {
     if (currentQuestion < zaritQuestions.length - 1) {
       setIsAnimating(true);
       setTimeout(() => {
-        setCurrentQuestion(currentQuestion + 1);
+        const nextQuestionIndex = currentQuestion + 1;
+        setCurrentQuestion(nextQuestionIndex);
+        setQuestionStartTime(new Date());
+        setVisitedQuestions(prev => new Set(prev).add(nextQuestionIndex));
         setIsAnimating(false);
+
+        // Track navigation
+        analytics.trackPageVisit(`question_${nextQuestionIndex + 1}`);
       }, 150);
     }
   };
@@ -42,8 +98,14 @@ export default function ZaritForm({ onComplete }: ZaritFormProps) {
     if (currentQuestion > 0) {
       setIsAnimating(true);
       setTimeout(() => {
-        setCurrentQuestion(currentQuestion - 1);
+        const prevQuestionIndex = currentQuestion - 1;
+        setCurrentQuestion(prevQuestionIndex);
+        setQuestionStartTime(new Date());
+        setVisitedQuestions(prev => new Set(prev).add(prevQuestionIndex));
         setIsAnimating(false);
+
+        // Track backward navigation
+        analytics.trackPageVisit(`question_${prevQuestionIndex + 1}_revisit`);
       }, 150);
     }
   };
@@ -52,6 +114,51 @@ export default function ZaritForm({ onComplete }: ZaritFormProps) {
     const validAnswers = answers.filter(answer => answer !== -1);
     if (validAnswers.length === zaritQuestions.length) {
       const results = calculateZaritScore(answers);
+      
+      // Track assessment completion analytics
+      if (analytics.hasResearchConsent) {
+        const missedQuestions = answers
+          .map((answer, index) => answer === -1 ? index + 1 : null)
+          .filter(q => q !== null) as number[];
+
+        const riskLevelMapping = {
+          'düşük': 'low' as const,
+          'orta': 'moderate' as const,
+          'yüksek': 'severe' as const,
+          'çok yüksek': 'severe' as const
+        };
+
+        analytics.trackAssessmentCompletion({
+          totalScore: results.score,
+          riskLevel: riskLevelMapping[results.riskLevel],
+          questionScores: answers,
+          missedQuestions,
+          assessmentValidity: missedQuestions.length === 0,
+          completionTimestamp: new Date()
+        });
+
+        // Track user journey completion
+        analytics.trackUserJourney({
+          entryPoint: 'assessment_form',
+          exitPoint: 'assessment_completed',
+          navigationPattern: Array.from(visitedQuestions).map(q => `question_${q + 1}`),
+          timeOnInstructions: 0, // Could be tracked if instructions page exists
+          helpSectionAccessed: false, // Could be tracked if help section exists
+          pdfDownloaded: false, // Will be tracked when user downloads PDF
+          sessionEvents: ['assessment_start', 'assessment_completed']
+        });
+
+        // End the assessment session
+        analytics.endAssessmentSession({
+          totalScore: results.score,
+          riskLevel: riskLevelMapping[results.riskLevel],
+          questionScores: answers,
+          missedQuestions,
+          assessmentValidity: true,
+          completionTimestamp: new Date()
+        });
+      }
+      
       onComplete(results);
     }
   };
@@ -192,6 +299,13 @@ export default function ZaritForm({ onComplete }: ZaritFormProps) {
           ))}
         </div>
       </div>
+
+      {/* Research Consent Modal */}
+      <ConsentModal
+        isOpen={analytics.showConsentModal}
+        onConsent={analytics.setResearchConsent}
+        onClose={() => analytics.setShowConsentModal(false)}
+      />
     </div>
   );
 }
