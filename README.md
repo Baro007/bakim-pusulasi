@@ -201,7 +201,7 @@ Bu proje [MIT Lisansı](LICENSE) altında lisanslanmıştır.
 ```
 MIT License
 
-Copyright (c) 2024 Bakım Pusulası Ekibi
+Copyright (c) 2025 Bakım Pusulası Ekibi
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files...
@@ -226,10 +226,10 @@ of this software and associated documentation files...
 
 ## 📞 İletişim
 
-- **Web**: https://bakimpusulasi.vercel.app
-- **GitHub**: https://github.com/bakim-pusulasi
-- **E-posta**: info@bakimpusulasi.org
-- **Twitter**: @bakimpusulasi
+- **Web**: https://bakimpusulasi.netlify.app
+- **GitHub**: [https://github.com/bakim-pusulasi](https://github.com/Baro007/bakim-pusulasi)
+- **E-posta**: sadikbarisadiguzel@gmail.com
+- **Twitter**: 
 
 ---
 
