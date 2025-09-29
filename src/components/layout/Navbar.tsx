@@ -12,6 +12,7 @@ export default function Navbar() {
 
   const navItems = [
     { name: 'Ana Sayfa', href: '/' },
+    { name: 'Bildiri', href: '/bildiri' },
     { name: 'Tanılama', href: '/tanilama' },
     { name: 'Araç Kiti', href: '/arac-kiti' },
     { name: 'Destek Ağı', href: '/destek-agi' },

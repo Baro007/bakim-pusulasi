@@ -38,3 +38,4 @@ echo "📋 Critical files:"
 ls -la out/ | head -10
 
 echo "🎉 Build completed successfully!"
+
