@@ -8,155 +8,250 @@ export interface ZaritQuestion {
 }
 
 export interface ZaritResult {
-  score: number;
+  totalScore: number; // Changed from 'score' to 'totalScore' for consistency
   interpretation: string;
   description: string;
   recommendations: string[];
   riskLevel: 'düşük' | 'orta' | 'yüksek' | 'çok yüksek';
 }
 
+// ============================================
+// FORM V2.0 - LITERATURE-BASED DATA INTERFACES
+// ============================================
+
+// BÖLÜM A: Bakım Veren Profili (31 alan)
+export interface CaregiverProfile {
+  // A1: Temel Demografik (5 alan)
+  name: string;
+  age: number;
+  gender: 'male' | 'female' | 'other' | 'prefer_not_to_say';
+  maritalStatus?: 'married' | 'single' | 'widowed' | 'divorced';
+  birthplace?: string; // il (kültürel bağlam için)
+
+  // A2: Eğitim & Literacy (4 alan)
+  educationLevel: 'illiterate' | 'primary' | 'secondary' | 'high_school' | 'university' | 'graduate';
+  healthLiteracy?: number; // 1-5 subjective scale
+  receivedCaregivingTraining?: boolean;
+  trainingType?: 'disease_specific' | 'general_care' | 'online' | 'other';
+
+  // A3: Çalışma & Ekonomi (7 alan)
+  employmentStatus: 'full_time' | 'part_time' | 'unemployed' | 'retired' | 'homemaker' | 'unable_to_work';
+  occupation?: string;
+  jobLossDueToCaregiving?: boolean;
+  workCaregivingConflict?: number; // 1-5: hiç yok → her zaman var
+  monthlyHouseholdIncome?: '<15K' | '15-30K' | '30-50K' | '50-75K' | '75K+';
+  receivingFinancialSupport?: boolean;
+  financialStrain?: 'none' | 'mild' | 'moderate' | 'severe';
+
+  // A4: Sağlık & Sigorta (5 alan)
+  healthInsurance?: 'sgk' | 'private' | 'both' | 'none';
+  hasChronicDisease?: boolean;
+  chronicDiseaseTypes?: string[]; // multi-select
+  regularMedicationUse?: boolean;
+  mentalHealthHistory?: 'depression' | 'anxiety' | 'other' | 'none';
+
+  // A5: Bakım Verme Özellikleri (6 alan)
+  relationshipToPatient: string;
+  primaryCaregiver: boolean;
+  hoursPerDay: number; // 0-24
+  caregivingDurationMonths: number;
+  livingArrangement: 'same_house' | 'separate_houses' | 'other';
+  otherCaregivers?: 'yes_regular' | 'yes_occasional' | 'no';
+
+  // A6: Sosyal Destek (4 alan)
+  familySupportPerception?: number; // 1-5
+  friendNeighborSupport?: number; // 1-5
+  usingHomeCareServices?: boolean;
+  receivingGovernmentSupport?: boolean; // valilik, belediye
+}
+
+// BÖLÜM B: Hasta Klinik Profili (16 alan)
+export interface PatientInformation {
+  // B1: Demografik (3 alan)
+  age: number;
+  gender: 'male' | 'female' | 'other';
+  educationLevel?: 'illiterate' | 'primary' | 'secondary' | 'high_school' | 'university' | 'graduate';
+
+  // B2: Klinik Durum (6 alan)
+  primaryDiagnosis: string;
+  diagnosisDurationYears?: number;
+  comorbidities?: string[]; // multi-select
+  diseaseStage?: 'early' | 'moderate' | 'advanced' | 'terminal' | 'unknown';
+  neuropsychiatricSymptoms?: 'yes_mild' | 'yes_severe' | 'no';
+  painLevel?: number; // 0-10 NRS
+
+  // B3: Fonksiyonel Durum (4 alan)
+  mobilityStatus: string;
+  cognitionStatus: string;
+  adlDependencyLevel?: 'independent' | 'partially_dependent' | 'fully_dependent';
+  iadlDependencyLevel?: 'independent' | 'partially_dependent' | 'fully_dependent';
+
+  // B4: Bakım & Tedavi (3 alan)
+  medicalEquipmentUsed?: string[];
+  homeHealthcareServices?: string[];
+  hospitalizationLast6Months?: '0' | '1-2' | '3+';
+}
+
+// BÖLÜM D: Mental Health Screening (Opsiyonel)
+export interface MentalHealthScreening {
+  // PHQ-2 (Depression)
+  phq2_anhedonia?: 0 | 1 | 2 | 3; // Zevk almama
+  phq2_depressed?: 0 | 1 | 2 | 3; // Depresif hissetme
+  phq2_total?: number; // 0-6
+
+  // GAD-2 (Anxiety)
+  gad2_nervous?: 0 | 1 | 2 | 3; // Sinirli, endişeli
+  gad2_worry?: 0 | 1 | 2 | 3; // Endişelenmeyi durduramama
+  gad2_total?: number; // 0-6
+
+  // Screening results
+  phq2_positive?: boolean; // ≥3
+  gad2_positive?: boolean; // ≥3
+}
+
 // Zarit Bakım Verme Yükü Ölçeği - Kısa Form (ZBI-12)
+// Standard validated questions (English + Turkish)
 export const zaritQuestions: ZaritQuestion[] = [
   {
     id: 1,
-    text: "Akrabanızın sizden daha fazla yardım istediğini düşünüyor musunuz?",
+    text: "Kendiniz için yeterli zamanınız olmadığını hissediyor musunuz?",
     options: [
       { value: 0, label: "Hiçbir zaman" },
       { value: 1, label: "Nadiren" },
       { value: 2, label: "Bazen" },
       { value: 3, label: "Oldukça sık" },
-      { value: 4, label: "Hemen hemen her zaman" }
+      { value: 4, label: "Her zaman" }
     ]
   },
   {
     id: 2,
-    text: "Akrabanızın davranışları nedeniyle zamanınızın yetmediğini düşünüyor musunuz?",
+    text: "Bakım verme ve diğer sorumluluklarınızı yerine getirme arasında stres yaşıyor musunuz?",
     options: [
       { value: 0, label: "Hiçbir zaman" },
       { value: 1, label: "Nadiren" },
       { value: 2, label: "Bazen" },
       { value: 3, label: "Oldukça sık" },
-      { value: 4, label: "Hemen hemen her zaman" }
+      { value: 4, label: "Her zaman" }
     ]
   },
   {
     id: 3,
-    text: "Akrabanıza bakım vermek ile diğer sorumluluklar arasında bocalayarak stres yaşıyor musunuz?",
+    text: "Hasta yakınınızın yanında olduğunuzda öfke hissediyor musunuz?",
     options: [
       { value: 0, label: "Hiçbir zaman" },
       { value: 1, label: "Nadiren" },
       { value: 2, label: "Bazen" },
       { value: 3, label: "Oldukça sık" },
-      { value: 4, label: "Hemen hemen her zaman" }
+      { value: 4, label: "Her zaman" }
     ]
   },
   {
     id: 4,
-    text: "Akrabanızın yanında bulunmanız nedeniyle utanç duyuyor musunuz?",
+    text: "Hasta yakınınızın diğer kişilerle olan ilişkinizi olumsuz etkilediğini düşünüyor musunuz?",
     options: [
       { value: 0, label: "Hiçbir zaman" },
       { value: 1, label: "Nadiren" },
       { value: 2, label: "Bazen" },
       { value: 3, label: "Oldukça sık" },
-      { value: 4, label: "Hemen hemen her zaman" }
+      { value: 4, label: "Her zaman" }
     ]
   },
   {
     id: 5,
-    text: "Akrabanızın yanında bulunduğunuzda sinirli ya da kızgın hissediyor musunuz?",
+    text: "Hasta yakınınızın yanında bulunduğunuzda gerilim yaşıyor musunuz?",
     options: [
       { value: 0, label: "Hiçbir zaman" },
       { value: 1, label: "Nadiren" },
       { value: 2, label: "Bazen" },
       { value: 3, label: "Oldukça sık" },
-      { value: 4, label: "Hemen hemen her zaman" }
+      { value: 4, label: "Her zaman" }
     ]
   },
   {
     id: 6,
-    text: "Akrabanızın sizin diğer aile bireyleri ile olan ilişkilerinizi olumsuz etkilediğini düşünüyor musunuz?",
+    text: "Hasta yakınınıza bakmak nedeniyle sağlığınızın olumsuz etkilendiğini düşünüyor musunuz?",
     options: [
       { value: 0, label: "Hiçbir zaman" },
       { value: 1, label: "Nadiren" },
       { value: 2, label: "Bazen" },
       { value: 3, label: "Oldukça sık" },
-      { value: 4, label: "Hemen hemen her zaman" }
+      { value: 4, label: "Her zaman" }
     ]
   },
   {
     id: 7,
-    text: "Akrabanızın gelecekte ne olacağından korkuyor musunuz?",
+    text: "Hasta yakınınız nedeniyle istediğiniz kadar mahremiyetinizin olmadığını hissediyor musunuz?",
     options: [
       { value: 0, label: "Hiçbir zaman" },
       { value: 1, label: "Nadiren" },
       { value: 2, label: "Bazen" },
       { value: 3, label: "Oldukça sık" },
-      { value: 4, label: "Hemen hemen her zaman" }
+      { value: 4, label: "Her zaman" }
     ]
   },
   {
     id: 8,
-    text: "Akrabanızın size bağımlı olduğunu düşünüyor musunuz?",
+    text: "Hasta yakınınıza bakmak nedeniyle sosyal yaşamınızın olumsuz etkilendiğini düşünüyor musunuz?",
     options: [
       { value: 0, label: "Hiçbir zaman" },
       { value: 1, label: "Nadiren" },
       { value: 2, label: "Bazen" },
       { value: 3, label: "Oldukça sık" },
-      { value: 4, label: "Hemen hemen her zaman" }
+      { value: 4, label: "Her zaman" }
     ]
   },
   {
     id: 9,
-    text: "Akrabanızın yanında bulunduğunuzda gerilim yaşıyor musunuz?",
+    text: "Hasta yakınınızın hastalığı nedeniyle hayatınızın kontrolünü kaybettiğinizi hissediyor musunuz?",
     options: [
       { value: 0, label: "Hiçbir zaman" },
       { value: 1, label: "Nadiren" },
       { value: 2, label: "Bazen" },
       { value: 3, label: "Oldukça sık" },
-      { value: 4, label: "Hemen hemen her zaman" }
+      { value: 4, label: "Her zaman" }
     ]
   },
   {
     id: 10,
-    text: "Akrabanıza bakım vermeniz nedeniyle sağlığınızın olumsuz etkilendiğini düşünüyor musunuz?",
+    text: "Hasta yakınınız için ne yapacağınız konusunda belirsizlik yaşıyor musunuz?",
     options: [
       { value: 0, label: "Hiçbir zaman" },
       { value: 1, label: "Nadiren" },
       { value: 2, label: "Bazen" },
       { value: 3, label: "Oldukça sık" },
-      { value: 4, label: "Hemen hemen her zaman" }
+      { value: 4, label: "Her zaman" }
     ]
   },
   {
     id: 11,
-    text: "Akrabanızın yanında bulunmanız nedeniyle istediğiniz kadar kişisel mahremiyetinizin olmadığını düşünüyor musunuz?",
+    text: "Hasta yakınınız için daha fazla şey yapmanız gerektiğini düşünüyor musunuz?",
     options: [
       { value: 0, label: "Hiçbir zaman" },
       { value: 1, label: "Nadiren" },
       { value: 2, label: "Bazen" },
       { value: 3, label: "Oldukça sık" },
-      { value: 4, label: "Hemen hemen her zaman" }
+      { value: 4, label: "Her zaman" }
     ]
   },
   {
     id: 12,
-    text: "Akrabanıza bakım vermeniz nedeniyle sosyal yaşamınızın olumsuz etkilendiğini düşünüyor musunuz?",
+    text: "Hasta yakınınıza daha iyi bakım verebileceğinizi düşünüyor musunuz?",
     options: [
       { value: 0, label: "Hiçbir zaman" },
       { value: 1, label: "Nadiren" },
       { value: 2, label: "Bazen" },
       { value: 3, label: "Oldukça sık" },
-      { value: 4, label: "Hemen hemen her zaman" }
+      { value: 4, label: "Her zaman" }
     ]
   }
 ];
 
 export function calculateZaritScore(answers: number[]): ZaritResult {
-  const score = answers.reduce((sum, answer) => sum + answer, 0);
+  const totalScore = answers.reduce((sum, answer) => sum + answer, 0);
   
-  if (score <= 10) {
+  if (totalScore <= 10) {
     return {
-      score,
+      totalScore,
       interpretation: "Hafif Bakım Yükü",
       riskLevel: "düşük",
       description: "Mevcut durumda yaşadığınız bakım yükü hafif düzeydedir. Bu çok normal ve yönetilebilir bir durumdur.",
@@ -167,9 +262,9 @@ export function calculateZaritScore(answers: number[]): ZaritResult {
         "Gerekli durumlarda profesyonel destek almaktan çekinmeyin"
       ]
     };
-  } else if (score <= 20) {
+  } else if (totalScore <= 20) {
     return {
-      score,
+      totalScore,
       interpretation: "Orta Düzey Bakım Yükü",
       riskLevel: "orta",
       description: "Yaşadığınız bakım yükü orta düzeydedir. Bu durum dikkat gerektirmekte ve aktif müdahale faydalı olacaktır.",
@@ -181,9 +276,9 @@ export function calculateZaritScore(answers: number[]): ZaritResult {
         "Gerekirse profesyonel psikolojik destek alın"
       ]
     };
-  } else if (score <= 30) {
+  } else if (totalScore <= 30) {
     return {
-      score,
+      totalScore,
       interpretation: "Yüksek Bakım Yükü",
       riskLevel: "yüksek",
       description: "Yaşadığınız bakım yükü yüksek düzeydedir. Bu durum hem sizin hem de bakım verdiğiniz kişinin sağlığını olumsuz etkileyebilir.",
@@ -198,7 +293,7 @@ export function calculateZaritScore(answers: number[]): ZaritResult {
     };
   } else {
     return {
-      score,
+      totalScore,
       interpretation: "Çok Yüksek Bakım Yükü",
       riskLevel: "çok yüksek",
       description: "Yaşadığınız bakım yükü kritik düzeydedir. Bu durum acil müdahale gerektirmektedir ve hem sizin hem de sevdiklerinizin sağlığı risk altındadır.",
