@@ -61,17 +61,17 @@ export default function Home() {
 
   const features = [
     {
-      icon: <ChartBarIcon className="w-6 h-6" />,
+      icon: ChartBarIcon,
       title: "Bilimsel Tanılama",
       description: "Zarit Bakım Yükü Ölçeği ile yükünüzü nesnel olarak ölçün ve kişiselleştirilmiş öneriler alın."
     },
     {
-      icon: <BookOpenIcon className="w-6 h-6" />,
+      icon: BookOpenIcon,
       title: "Kapsamlı Araç Kiti",
       description: "Teknik beceriler, duygusal dayanıklılık ve sistem navigasyonu için kanıta dayalı rehberler."
     },
     {
-      icon: <UserGroupIcon className="w-6 h-6" />,
+      icon: UserGroupIcon,
       title: "Güçlü Destek Ağı",
       description: "Türkiye genelindeki destek kaynaklarına kolayca erişin ve yalnız olmadığınızı hissedin."
     }

@@ -118,26 +118,87 @@ export default function NewZaritForm() {
     setIsSubmitting(false);
   };
 
-  // Progress bar component
+  // Enhanced Progress bar with glassmorphism
   const ProgressBar = () => (
-    <div className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm">
-      <div className="h-2 bg-gray-200">
+    <motion.div 
+      className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-200/50 shadow-lg"
+      initial={{ y: -100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.5, type: 'spring' }}
+    >
+      {/* Animated gradient progress */}
+      <div className="h-1.5 bg-gray-100">
         <motion.div
-          className="h-full bg-gradient-to-r from-purple-500 to-blue-500"
+          className="h-full bg-gradient-to-r from-teal-500 via-blue-500 to-purple-500 shadow-lg"
           initial={{ width: 0 }}
           animate={{ width: `${getProgress()}%` }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+          style={{ 
+            boxShadow: '0 0 20px rgba(20, 184, 166, 0.5)' 
+          }}
         />
       </div>
-      <div className="px-4 py-2 text-center">
-        <p className="text-sm font-medium text-gray-600">
-          {currentSection === 'caregiver' && 'Bölüm A: Sizin Hikayeniz'}
-          {currentSection === 'patient' && 'Bölüm B: Onun Dünyası'}
-          {currentSection === 'zbi' && `Bölüm C: Duygularınız (${currentQuestionIndex + 1}/12)`}
-          {currentSection === 'results' && 'Sonuçlarınız'}
-        </p>
+      
+      {/* Enhanced section indicator */}
+      <div className="px-4 sm:px-6 py-3">
+        <motion.div 
+          className="max-w-2xl mx-auto flex items-center justify-between"
+          layout
+        >
+          <div className="flex items-center gap-3">
+            {/* Icon based on section */}
+            <motion.div
+              key={currentSection}
+              initial={{ scale: 0, rotate: -180 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ type: 'spring', stiffness: 200 }}
+              className="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-500 to-blue-600 flex items-center justify-center shadow-md"
+            >
+              {currentSection === 'caregiver' && <UserCircleIcon className="w-6 h-6 text-white" />}
+              {currentSection === 'patient' && <HeartIcon className="w-6 h-6 text-white" />}
+              {currentSection === 'zbi' && <ClipboardDocumentCheckIcon className="w-6 h-6 text-white" />}
+              {currentSection === 'results' && <CheckCircleIcon className="w-6 h-6 text-white" />}
+            </motion.div>
+            
+            <div>
+              <motion.p 
+                key={`title-${currentSection}`}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3 }}
+                className="text-base sm:text-lg font-bold text-gray-900"
+              >
+                {currentSection === 'caregiver' && 'Bölüm A: Sizin Hikayeniz'}
+                {currentSection === 'patient' && 'Bölüm B: Onun Dünyası'}
+                {currentSection === 'zbi' && 'Bölüm C: Duygularınız'}
+                {currentSection === 'results' && 'Sonuçlarınız'}
+              </motion.p>
+              {currentSection === 'zbi' && (
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-sm text-gray-600"
+                >
+                  Soru {currentQuestionIndex + 1} / 12
+                </motion.p>
+              )}
+            </div>
+          </div>
+
+          {/* Progress percentage */}
+          <motion.div
+            key={getProgress()}
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="hidden sm:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-teal-50 to-blue-50 rounded-full border border-teal-200"
+          >
+            <span className="text-sm font-bold text-teal-700">
+              %{Math.round(getProgress())}
+            </span>
+          </motion.div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 
   // Show consent screen first
@@ -161,11 +222,19 @@ export default function NewZaritForm() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
+    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-blue-50 to-purple-50 pb-20 relative overflow-hidden">
+      {/* Subtle background pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `radial-gradient(circle at 2px 2px, #0d9488 1px, transparent 0)`,
+          backgroundSize: '30px 30px'
+        }} />
+      </div>
+
       <ProgressBar />
 
-      {/* Main Content - Mobile Optimized */}
-      <div className="pt-24 px-4 max-w-2xl mx-auto">
+      {/* Main Content - Mobile Optimized with glassmorphism */}
+      <div className="pt-28 px-4 max-w-2xl mx-auto relative z-10">
         <AnimatePresence mode="wait">
           {currentSection === 'caregiver' && (
             <CaregiverSection
