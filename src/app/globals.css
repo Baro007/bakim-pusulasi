@@ -217,43 +217,103 @@ button:focus {
 /* ELDERLY-FRIENDLY FORM STYLES - MOBILE FIRST */
 /* ============================================= */
 
-/* Large, easy-to-tap form inputs */
+/* Large, easy-to-tap form inputs - glassmorphism */
 .form-input-large {
-  @apply w-full px-6 py-4 text-2xl border-2 border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-purple-500 focus:border-purple-500 transition-all;
+  @apply w-full px-6 py-4 text-2xl border-2 border-gray-200 rounded-2xl bg-white/80 backdrop-blur-md focus:outline-none focus:ring-4 focus:ring-teal-400 focus:border-teal-400 hover:border-gray-300 transition-all duration-300;
   min-height: 60px;
   font-weight: 500;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
-/* Primary action button - large and obvious */
+.form-input-large:focus {
+  background: white;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 15px -3px rgba(20, 184, 166, 0.1);
+}
+
+/* Primary action button - ultra modern with 3D effect */
 .btn-primary-large {
-  @apply flex items-center justify-center px-8 py-5 text-2xl font-bold text-white bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl shadow-lg hover:shadow-xl hover:from-purple-700 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all;
+  @apply flex items-center justify-center px-8 py-5 text-2xl font-bold text-white bg-gradient-to-r from-teal-600 via-blue-600 to-purple-600 rounded-2xl shadow-2xl hover:shadow-[0_20px_60px_-15px_rgba(20,184,166,0.5)] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300;
   min-height: 70px;
+  background-size: 200% 100%;
+  background-position: 0% 50%;
+  position: relative;
+  overflow: hidden;
 }
 
-/* Secondary button - back/cancel actions */
+.btn-primary-large:hover:not(:disabled) {
+  background-position: 100% 50%;
+  transform: translateY(-2px) scale(1.02);
+}
+
+.btn-primary-large:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Secondary button - glassmorphism style */
 .btn-secondary-large {
-  @apply flex items-center justify-center px-8 py-5 text-2xl font-bold text-gray-700 bg-white border-2 border-gray-300 rounded-xl hover:bg-gray-50 transition-all;
+  @apply flex items-center justify-center px-8 py-5 text-2xl font-bold text-gray-800 bg-white/80 backdrop-blur-md border-2 border-gray-200 rounded-2xl hover:bg-white hover:border-teal-300 hover:shadow-xl transition-all duration-300;
   min-height: 70px;
 }
 
-/* Multiple choice option buttons */
+.btn-secondary-large:hover {
+  transform: translateY(-2px);
+}
+
+.btn-secondary-large:active {
+  transform: translateY(0);
+}
+
+/* Multiple choice option buttons - glassmorphism */
 .btn-option {
-  @apply px-6 py-4 text-xl font-semibold text-gray-700 bg-white border-2 border-gray-300 rounded-xl hover:border-purple-500 hover:bg-purple-50 transition-all;
+  @apply px-6 py-4 text-xl font-semibold text-gray-800 bg-white/80 backdrop-blur-md border-2 border-gray-200 rounded-2xl hover:border-teal-400 hover:bg-white hover:shadow-lg transition-all duration-300;
   min-height: 65px;
+  position: relative;
+}
+
+.btn-option:hover {
+  transform: translateY(-2px) scale(1.01);
 }
 
 .btn-option.active {
-  @apply bg-gradient-to-r from-purple-600 to-blue-600 text-white border-purple-600 shadow-lg;
+  @apply bg-gradient-to-r from-teal-600 via-blue-600 to-purple-600 text-white border-transparent shadow-2xl;
+  background-size: 200% 100%;
+  animation: shimmer 3s infinite;
 }
 
-/* ZBI question option buttons */
+@keyframes shimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ZBI question option buttons - enhanced glassmorphism */
 .btn-option-zbi {
-  @apply flex items-center w-full px-6 py-5 text-left text-gray-700 bg-white border-2 border-gray-300 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all;
+  @apply flex items-center w-full px-6 py-5 text-left text-gray-800 bg-white/80 backdrop-blur-md border-2 border-gray-200 rounded-2xl hover:border-blue-400 hover:bg-white hover:shadow-xl transition-all duration-300;
   min-height: 70px;
+  position: relative;
+}
+
+.btn-option-zbi:hover {
+  transform: translateX(4px) scale(1.01);
 }
 
 .btn-option-zbi.active {
-  @apply bg-gradient-to-r from-blue-600 to-purple-600 text-white border-blue-600 shadow-lg;
+  @apply bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white border-transparent shadow-2xl;
+  background-size: 200% 100%;
+  animation: shimmer 3s infinite;
+  transform: translateX(8px) scale(1.02);
+}
+
+.btn-option-zbi.active::before {
+  content: '✓';
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
+  font-weight: bold;
+  opacity: 0.9;
 }
 
 /* High contrast mode for better visibility */
