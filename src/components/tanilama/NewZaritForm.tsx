@@ -1558,7 +1558,7 @@ function ZBISection({
             </motion.button>
           ))}
         </div>
-      </div>
+      </motion.div>
 
       <button onClick={onBack} className="btn-secondary-large w-full" disabled={isSubmitting}>
         <ArrowLeftIcon className="w-6 h-6 mr-2" /> Geri Dön
@@ -1656,127 +1656,203 @@ function MentalHealthSection({
   }
 
   if (currentScreen === 'phq2') {
+    const questions = [
+      { key: 'phq2_anhedonia' as keyof MentalHealthScreening, text: 'Yaptığınız işlerden zevk almama veya ilgi duymama?' },
+      { key: 'phq2_depressed' as keyof MentalHealthScreening, text: 'Kendinizi üzgün, depresif veya umutsuz hissetme?' }
+    ];
+    const currentQ = questions.findIndex(q => data[q.key] === undefined);
+    const activeQuestion = currentQ >= 0 ? currentQ : questions.length - 1;
+    const question = questions[activeQuestion];
+    const currentAnswer = data[question.key] as number | undefined;
+
+    const mentalEmojis = ['😊', '😐', '😟', '😭'];
+
     return (
       <motion.div
+        key={activeQuestion}
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: -50 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
         className="space-y-6"
       >
-        <div className="text-center mb-8">
-          <HeartIcon className="w-20 h-20 mx-auto text-purple-600 mb-4" />
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">Depresyon Taraması (PHQ-2)</h2>
-          <p className="text-lg text-gray-600">Son 2 haftada ne sıklıkta yaşadınız?</p>
+        {/* Progress Dots */}
+        <div className="flex justify-center gap-2 mb-6">
+          {questions.map((_, idx) => (
+            <motion.div
+              key={idx}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                idx < activeQuestion
+                  ? 'w-10 bg-gradient-to-r from-purple-500 to-pink-500'
+                  : idx === activeQuestion
+                  ? 'w-14 bg-gradient-to-r from-pink-500 to-red-500'
+                  : 'w-6 bg-gray-300'
+              }`}
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+            />
+          ))}
         </div>
 
-        <div className="space-y-6">
-          <div className="bg-white p-6 rounded-2xl shadow-lg">
-            <p className="text-2xl font-medium text-gray-900 mb-4">
-              1. Yaptığınız işlerden zevk almama veya ilgi duymama?
-            </p>
-            <div className="grid grid-cols-1 gap-3">
-              {phqGadOptions.map((option) => (
-                <button
-                  key={option.value}
-                  type="button"
-                  onClick={() => onChange({ ...data, phq2_anhedonia: option.value as any })}
-                  className={`btn-option ${data.phq2_anhedonia === option.value ? 'active' : ''}`}
-                >
-                  {option.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="bg-white p-6 rounded-2xl shadow-lg">
-            <p className="text-2xl font-medium text-gray-900 mb-4">
-              2. Kendinizi üzgün, depresif veya umutsuz hissetme?
-            </p>
-            <div className="grid grid-cols-1 gap-3">
-              {phqGadOptions.map((option) => (
-                <button
-                  key={option.value}
-                  type="button"
-                  onClick={() => onChange({ ...data, phq2_depressed: option.value as any })}
-                  className={`btn-option ${data.phq2_depressed === option.value ? 'active' : ''}`}
-                >
-                  {option.label}
-                </button>
-              ))}
-            </div>
-          </div>
+        {/* Header */}
+        <div className="text-center mb-6">
+          <HeartIcon className="w-16 h-16 mx-auto text-pink-500 mb-3" />
+          <motion.p className="text-sm font-semibold text-gray-500 mb-2">
+            Depresyon Taraması · Soru {activeQuestion + 1} / {questions.length}
+          </motion.p>
+          <p className="text-base text-gray-600">Son 2 haftada ne sıklıkta yaşadınız?</p>
         </div>
 
-        <button
-          type="button"
-          onClick={handlePHQ2Complete}
-          disabled={data.phq2_anhedonia === undefined || data.phq2_depressed === undefined}
-          className="btn-primary-large w-full"
+        {/* Story Card */}
+        <motion.div 
+          className="bg-white/90 backdrop-blur-md rounded-3xl p-8 shadow-2xl border border-pink-200"
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
         >
-          Devam Et <ArrowRightIcon className="w-6 h-6 ml-2" />
-        </button>
+          <p className="text-2xl md:text-3xl font-bold text-gray-900 leading-relaxed mb-8 text-center">
+            {question.text}
+          </p>
+
+          {/* Options with Emojis */}
+          <div className="space-y-4">
+            {phqGadOptions.map((option, idx) => (
+              <motion.button
+                key={option.value}
+                type="button"
+                onClick={() => {
+                  onChange({ ...data, [question.key]: option.value as any });
+                  if ('vibrate' in navigator) navigator.vibrate(10);
+                  if (activeQuestion < questions.length - 1) {
+                    setTimeout(() => {
+                      // Auto-advance handled by re-render
+                    }, 300);
+                  } else {
+                    setTimeout(handlePHQ2Complete, 500);
+                  }
+                }}
+                className={`btn-option-zbi ${currentAnswer === option.value ? 'active' : ''}`}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: idx * 0.1 }}
+                whileHover={{ scale: 1.02, x: 4 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <span className="text-3xl mr-4">{mentalEmojis[option.value]}</span>
+                <span className="text-xl font-semibold flex-1 text-left">{option.label}</span>
+                {currentAnswer === option.value && (
+                  <motion.div
+                    initial={{ scale: 0, rotate: -180 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ type: 'spring', stiffness: 500 }}
+                  >
+                    <CheckCircleIcon className="w-8 h-8 text-white" />
+                  </motion.div>
+                )}
+              </motion.button>
+            ))}
+          </div>
+        </motion.div>
       </motion.div>
     );
   }
 
   if (currentScreen === 'gad2') {
+    const questions = [
+      { key: 'gad2_nervous' as keyof MentalHealthScreening, text: 'Sinirli, endişeli veya gergin hissetme?' },
+      { key: 'gad2_worry' as keyof MentalHealthScreening, text: 'Endişelenmeyi durduramama veya kontrol edememe?' }
+    ];
+    const currentQ = questions.findIndex(q => data[q.key] === undefined);
+    const activeQuestion = currentQ >= 0 ? currentQ : questions.length - 1;
+    const question = questions[activeQuestion];
+    const currentAnswer = data[question.key] as number | undefined;
+
+    const anxietyEmojis = ['😌', '😰', '😨', '😱'];
+
     return (
       <motion.div
+        key={activeQuestion}
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: -50 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
         className="space-y-6"
       >
-        <div className="text-center mb-8">
-          <HeartIcon className="w-20 h-20 mx-auto text-blue-600 mb-4" />
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">Anksiyete Taraması (GAD-2)</h2>
-          <p className="text-lg text-gray-600">Son 2 haftada ne sıklıkta yaşadınız?</p>
+        {/* Progress Dots */}
+        <div className="flex justify-center gap-2 mb-6">
+          {questions.map((_, idx) => (
+            <motion.div
+              key={idx}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                idx < activeQuestion
+                  ? 'w-10 bg-gradient-to-r from-blue-500 to-teal-500'
+                  : idx === activeQuestion
+                  ? 'w-14 bg-gradient-to-r from-teal-500 to-green-500'
+                  : 'w-6 bg-gray-300'
+              }`}
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+            />
+          ))}
         </div>
 
-        <div className="space-y-6">
-          <div className="bg-white p-6 rounded-2xl shadow-lg">
-            <p className="text-2xl font-medium text-gray-900 mb-4">
-              3. Sinirli, endişeli veya gergin hissetme?
-            </p>
-            <div className="grid grid-cols-1 gap-3">
-              {phqGadOptions.map((option) => (
-                <button
-                  key={option.value}
-                  type="button"
-                  onClick={() => onChange({ ...data, gad2_nervous: option.value as any })}
-                  className={`btn-option ${data.gad2_nervous === option.value ? 'active' : ''}`}
-                >
-                  {option.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="bg-white p-6 rounded-2xl shadow-lg">
-            <p className="text-2xl font-medium text-gray-900 mb-4">
-              4. Endişelenmeyi durduramama veya kontrol edememe?
-            </p>
-            <div className="grid grid-cols-1 gap-3">
-              {phqGadOptions.map((option) => (
-                <button
-                  key={option.value}
-                  type="button"
-                  onClick={() => onChange({ ...data, gad2_worry: option.value as any })}
-                  className={`btn-option ${data.gad2_worry === option.value ? 'active' : ''}`}
-                >
-                  {option.label}
-                </button>
-              ))}
-            </div>
-          </div>
+        {/* Header */}
+        <div className="text-center mb-6">
+          <HeartIcon className="w-16 h-16 mx-auto text-teal-500 mb-3" />
+          <motion.p className="text-sm font-semibold text-gray-500 mb-2">
+            Anksiyete Taraması · Soru {activeQuestion + 1} / {questions.length}
+          </motion.p>
+          <p className="text-base text-gray-600">Son 2 haftada ne sıklıkta yaşadınız?</p>
         </div>
 
-        <button
-          type="button"
-          onClick={handleGAD2Complete}
-          disabled={data.gad2_nervous === undefined || data.gad2_worry === undefined}
-          className="btn-primary-large w-full"
+        {/* Story Card */}
+        <motion.div 
+          className="bg-white/90 backdrop-blur-md rounded-3xl p-8 shadow-2xl border border-teal-200"
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
         >
-          Tamamla ve Sonuçlara Git <ArrowRightIcon className="w-6 h-6 ml-2" />
-        </button>
+          <p className="text-2xl md:text-3xl font-bold text-gray-900 leading-relaxed mb-8 text-center">
+            {question.text}
+          </p>
+
+          {/* Options with Emojis */}
+          <div className="space-y-4">
+            {phqGadOptions.map((option, idx) => (
+              <motion.button
+                key={option.value}
+                type="button"
+                onClick={() => {
+                  onChange({ ...data, [question.key]: option.value as any });
+                  if ('vibrate' in navigator) navigator.vibrate(10);
+                  if (activeQuestion < questions.length - 1) {
+                    setTimeout(() => {
+                      // Auto-advance handled by re-render
+                    }, 300);
+                  } else {
+                    setTimeout(handleGAD2Complete, 500);
+                  }
+                }}
+                className={`btn-option-zbi ${currentAnswer === option.value ? 'active' : ''}`}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: idx * 0.1 }}
+                whileHover={{ scale: 1.02, x: 4 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <span className="text-3xl mr-4">{anxietyEmojis[option.value]}</span>
+                <span className="text-xl font-semibold flex-1 text-left">{option.label}</span>
+                {currentAnswer === option.value && (
+                  <motion.div
+                    initial={{ scale: 0, rotate: -180 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ type: 'spring', stiffness: 500 }}
+                  >
+                    <CheckCircleIcon className="w-8 h-8 text-white" />
+                  </motion.div>
+                )}
+              </motion.button>
+            ))}
+          </div>
+        </motion.div>
       </motion.div>
     );
   }
@@ -1801,31 +1877,50 @@ function AccordionCategory({
   children: React.ReactNode;
 }) {
   return (
-    <div className="bg-white rounded-2xl shadow-lg overflow-hidden border-2 border-gray-200">
-      <button
+    <motion.div 
+      className="bg-white/80 backdrop-blur-md rounded-3xl shadow-xl overflow-hidden border border-gray-200"
+      whileHover={{ scale: 1.01, y: -2 }}
+      transition={{ type: 'spring', stiffness: 300 }}
+    >
+      <motion.button
         type="button"
         onClick={onClick}
-        className={`w-full px-6 py-5 flex items-center justify-between transition-all ${
-          isActive ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white' : 'bg-gray-50'
+        className={`w-full px-6 py-6 flex items-center justify-between transition-all duration-300 ${
+          isActive 
+            ? 'bg-gradient-to-r from-teal-600 via-blue-600 to-purple-600 text-white shadow-lg' 
+            : 'bg-gradient-to-r from-gray-50 to-white hover:from-gray-100 hover:to-gray-50'
         }`}
+        whileTap={{ scale: 0.98 }}
       >
-        <span className="text-xl font-bold">{title}</span>
-        <div className="flex items-center space-x-3">
-          {isComplete && (
-            <CheckCircleIcon className={`w-7 h-7 ${isActive ? 'text-white' : 'text-green-500'}`} />
+        <span className="text-xl font-black flex items-center gap-3">
+          {title}
+          {isComplete && !isActive && (
+            <motion.span
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: 'spring', stiffness: 500 }}
+              className="text-2xl"
+            >
+              ✅
+            </motion.span>
           )}
-          <motion.div animate={{ rotate: isActive ? 180 : 0 }} transition={{ duration: 0.3 }}>
+        </span>
+        <div className="flex items-center space-x-3">
+          <motion.div 
+            animate={{ rotate: isActive ? 180 : 0 }} 
+            transition={{ duration: 0.3, type: 'spring' }}
+          >
             <svg
-              className={`w-6 h-6 ${isActive ? 'text-white' : 'text-gray-600'}`}
+              className={`w-7 h-7 ${isActive ? 'text-white' : 'text-gray-600'}`}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" />
             </svg>
           </motion.div>
         </div>
-      </button>
+      </motion.button>
 
       <AnimatePresence>
         {isActive && (
@@ -1840,7 +1935,7 @@ function AccordionCategory({
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 }
 
