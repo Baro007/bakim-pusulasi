@@ -649,3 +649,5 @@ Redundancy yok, internal consistency kanıtı."
 *Prepared by: Sadık Barış Adıgüzel*  
 *Supervised by: Doç. Dr. Mehmet Özen*
 
+
+

@@ -316,3 +316,5 @@ COMMENT ON VIEW mental_health_correlations IS 'Mental sağlık ve bakım yükü 
 -- 2. Verify tables created: SELECT * FROM analytics_summary;
 -- 3. Test INSERT with sample data
 -- 4. Update frontend code to use new fields
+
+

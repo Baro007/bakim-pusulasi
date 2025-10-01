@@ -288,3 +288,5 @@ BÖLÜM D: Ek Ölçekler (OPSIYONEL) ✨
 
 **HANGİ YOLU SEÇELİM?** 🎯  
 **(A/B/C belirtin, detaylı ilerleme planı hazırlayayım)**
+
+

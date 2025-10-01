@@ -474,3 +474,5 @@ node scripts/test-supabase-connection.js
 **Hazırlayan:** Sadık Barış Adıgüzel  
 **Tarih:** 30 Ocak 2025  
 **Supabase Version:** Latest stable
+
+

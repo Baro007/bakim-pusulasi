@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/layout/Navbar";
+import FloatingNav from "@/components/layout/FloatingNav";
 import Footer from "@/components/layout/Footer";
 import { PresentationProvider } from "@/lib/presentation-context";
 import { AnalyticsProvider } from "@/lib/analytics-context";
@@ -39,9 +39,9 @@ export default function RootLayout({
         <PresentationProvider>
           <AnalyticsProvider>
             <PresentationLayout>
+              <FloatingNav />
               <div className="min-h-screen flex flex-col">
-                <Navbar />
-                <main className="flex-grow">
+                <main className="flex-grow pt-20 md:pt-24">
                   {children}
                 </main>
                 <Footer />

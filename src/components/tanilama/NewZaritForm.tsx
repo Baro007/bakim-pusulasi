@@ -16,7 +16,6 @@ import { zaritQuestions, calculateZaritScore } from '@/lib/zarit-questions';
 import { submitAssessment } from '@/lib/supabase-client';
 import ZaritResults from './ZaritResults';
 import InformedConsent from './InformedConsent';
-import { useFormAutoSave } from '@/hooks/useFormAutoSave';
 
 // Mobile-first, elderly-friendly form for ZBI-12 assessment
 // 3 sections: A) Caregiver Profile, B) Patient Info, C) ZBI-12 Questions
@@ -42,39 +41,6 @@ export default function NewZaritForm() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [startTime] = useState(new Date().toISOString());
-  const [showSavedDataPrompt, setShowSavedDataPrompt] = useState(false);
-
-  // Auto-save functionality
-  const { loadSavedData, clearSavedData } = useFormAutoSave({
-    key: 'bakim-pusulasi-form-data',
-    data: { formData, currentSection, currentQuestionIndex },
-    delay: 2000, // Save after 2 seconds of inactivity
-  });
-
-  // Load saved data on mount (after consent)
-  useEffect(() => {
-    if (consentGiven) {
-      const saved = loadSavedData();
-      if (saved && saved.formData) {
-        setShowSavedDataPrompt(true);
-      }
-    }
-  }, [consentGiven, loadSavedData]);
-
-  const handleLoadSavedData = () => {
-    const saved = loadSavedData();
-    if (saved) {
-      setFormData(saved.formData || formData);
-      setCurrentSection(saved.currentSection || 'caregiver');
-      setCurrentQuestionIndex(saved.currentQuestionIndex || 0);
-      setShowSavedDataPrompt(false);
-    }
-  };
-
-  const handleStartFresh = () => {
-    clearSavedData();
-    setShowSavedDataPrompt(false);
-  };
 
   // Calculate progress percentage
   const getProgress = () => {
@@ -143,7 +109,6 @@ export default function NewZaritForm() {
 
     if (response.success) {
       console.log('✅ Assessment submitted successfully:', response.data);
-      clearSavedData(); // Clear auto-saved data after successful submission
       setCurrentSection('results');
     } else {
       console.error('❌ Assessment submission failed:', response.error);
@@ -180,45 +145,9 @@ export default function NewZaritForm() {
     return <InformedConsent onAccept={() => setConsentGiven(true)} />;
   }
 
-  // Show saved data prompt if exists
-  if (showSavedDataPrompt) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-teal-50 flex items-center justify-center p-4">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="bg-white rounded-3xl shadow-2xl p-8 max-w-2xl w-full"
-        >
-          <BookmarkIcon className="w-20 h-20 mx-auto text-blue-600 mb-6" />
-          <h2 className="text-3xl font-bold text-gray-900 text-center mb-4">
-            Kaldığınız Yerden Devam Edin
-          </h2>
-          <p className="text-lg text-gray-600 text-center mb-8">
-            Daha önce doldurduğunuz formu tespit ettik. Kaldığınız yerden devam etmek ister misiniz?
-          </p>
-          <div className="flex gap-4">
-            <button
-              onClick={handleStartFresh}
-              className="flex-1 px-6 py-4 text-lg font-semibold text-gray-700 bg-white border-2 border-gray-300 rounded-xl hover:bg-gray-50 transition-all"
-            >
-              Yeni Başla
-            </button>
-            <button
-              onClick={handleLoadSavedData}
-              className="flex-1 px-6 py-4 text-lg font-semibold text-white bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl hover:from-purple-700 hover:to-blue-700 shadow-lg transition-all"
-            >
-              Devam Et
-            </button>
-          </div>
-        </motion.div>
-      </div>
-    );
-  }
-
   if (currentSection === 'results') {
     const result = calculateZaritScore(formData.zaritAnswers);
     const handleRestart = () => {
-      clearSavedData();
       setCurrentSection('caregiver');
       setFormData({
         caregiver: {},

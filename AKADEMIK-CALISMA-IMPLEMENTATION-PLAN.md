@@ -619,3 +619,5 @@ export function ThreeStepProgress({ currentSection }) {
 **Hazırlayın:** Sadık Barış Adıgüzel  
 **Academic Supervisor:** Doç. Dr. Mehmet Özen  
 **Implementation Start:** [Bugün]
+
+
