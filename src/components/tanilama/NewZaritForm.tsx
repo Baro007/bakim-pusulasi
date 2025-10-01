@@ -16,6 +16,7 @@ import { zaritQuestions, calculateZaritScore } from '@/lib/zarit-questions';
 import { submitAssessment } from '@/lib/supabase-client';
 import ZaritResults from './ZaritResults';
 import InformedConsent from './InformedConsent';
+import InfoTooltip from '@/components/ui/InfoTooltip';
 
 // Mobile-first, elderly-friendly form for ZBI-12 assessment
 // 3 sections: A) Caregiver Profile, B) Patient Info, C) ZBI-12 Questions
@@ -1146,13 +1147,18 @@ function PatientSection({
           </div>
         </FormField>
 
-        <FormField label="Hastalık Evresi">
+        <FormField label={
+          <div className="flex items-center gap-2">
+            <span>Hastalık ne kadar ilerledi?</span>
+            <InfoTooltip text="Hastalığın şu anki durumu. Yeni başladıysa 'Erken', uzun süredir varsa ve zorlanıyorsa 'İleri' seçebilirsiniz." />
+          </div>
+        }>
           <div className="grid grid-cols-2 gap-3">
             {[
-              { value: 'early', label: 'Erken' },
-              { value: 'moderate', label: 'Orta' },
-              { value: 'advanced', label: 'İleri' },
-              { value: 'terminal', label: 'Terminal' },
+              { value: 'early', label: '🌱 Erken (Yeni başladı)', desc: 'Az yardım gerekiyor' },
+              { value: 'moderate', label: '🔶 Orta (Bir süredir var)', desc: 'Orta düzey yardım gerekiyor' },
+              { value: 'advanced', label: '🔴 İleri (Uzun süredir)', desc: 'Çok yardım gerekiyor' },
+              { value: 'terminal', label: '⚫ Son dönem (Yaşamın son evresi)', desc: 'Sürekli bakım gerekiyor' },
             ].map((option) => (
               <button
                 key={option.value}
@@ -1160,9 +1166,12 @@ function PatientSection({
                 onClick={() => onChange({ ...data, diseaseStage: option.value as any })}
                 className={`btn-option ${
                   data.diseaseStage === option.value ? 'active' : ''
-                }`}
+                } text-left`}
               >
-                {option.label}
+                <div>
+                  <div className="font-bold text-base">{option.label}</div>
+                  <div className="text-xs opacity-75 mt-1">{option.desc}</div>
+                </div>
               </button>
             ))}
           </div>
