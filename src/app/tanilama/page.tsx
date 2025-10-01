@@ -2,10 +2,8 @@
 
 import React from 'react';
 
-// Static export optimization
-export const dynamic = 'force-static';
-
-// NEW: Mobile-first 3-section form for elderly users
+// Client-side only - uses Supabase
+// No static export for this page
 import NewZaritForm from '@/components/tanilama/NewZaritForm';
 
 export default function TanilamaPage() {
