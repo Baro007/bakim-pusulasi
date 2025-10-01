@@ -1240,17 +1240,22 @@ function PatientSection({
           </select>
         </FormField>
 
-        <FormField label="Zihinsel durum" required>
+        <FormField label={
+          <div className="flex items-center gap-2">
+            <span>Hafıza ve Zihin Durumu</span>
+            <InfoTooltip text="Hastanın hatırlama, konuşma ve günlük işleri anlama yeteneği. Demans = Bunama/Hafıza kaybı hastalığı." />
+          </div>
+        } required>
           <select
             value={data.cognitionStatus || ''}
             onChange={(e) => onChange({ ...data, cognitionStatus: e.target.value })}
             className="form-input-large"
           >
             <option value="">Seçiniz...</option>
-            <option value="Normal">Normal</option>
-            <option value="Hafif unutkanlık">Hafif Unutkanlık</option>
-            <option value="Orta demans">Orta Demans</option>
-            <option value="İleri demans">İleri Demans</option>
+            <option value="Normal">😊 Normal (İyi hatırlıyor, konuşuyor)</option>
+            <option value="Hafif unutkanlık">😐 Hafif Unutkanlık (Bazen unutuyor)</option>
+            <option value="Orta demans">😟 Orta Hafıza Kaybı (Sık unutuyor, karışıyor)</option>
+            <option value="İleri demans">😭 İleri Hafıza Kaybı (Tanımıyor, konuşamıyor)</option>
           </select>
         </FormField>
 
