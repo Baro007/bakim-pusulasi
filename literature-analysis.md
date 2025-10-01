@@ -226,3 +226,4 @@
 **SONUÇ:** Hedefimiz net - Q1 dergi yayını, sosyal etki, Erasmus projesi. Şimdi eksik verileri tamamlayıp akademik mükemmelliğe ulaşacağız! 🚀
 
 
+

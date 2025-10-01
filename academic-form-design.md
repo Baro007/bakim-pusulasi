@@ -290,3 +290,4 @@ BÖLÜM D: Ek Ölçekler (OPSIYONEL) ✨
 **(A/B/C belirtin, detaylı ilerleme planı hazırlayayım)**
 
 
+

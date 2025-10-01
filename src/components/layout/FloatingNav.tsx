@@ -10,6 +10,7 @@ import {
   BookOpenIcon,
   UserGroupIcon,
   ClipboardDocumentCheckIcon,
+  DocumentChartBarIcon,
   Bars3Icon,
   XMarkIcon
 } from '@heroicons/react/24/outline';
@@ -51,6 +52,7 @@ export default function FloatingNav() {
     { name: 'Ana Sayfa', href: '/', icon: HomeIcon },
     { name: 'Tanılama', href: '/tanilama', icon: ClipboardDocumentCheckIcon },
     { name: 'İstatistikler', href: '/istatistikler', icon: ChartBarIcon },
+    { name: 'Bildiri', href: '/bildiri', icon: DocumentChartBarIcon },
     { name: 'Araç Kiti', href: '/arac-kiti', icon: BookOpenIcon },
     { name: 'Destek Ağı', href: '/destek-agi', icon: UserGroupIcon },
   ];
@@ -210,4 +212,5 @@ export default function FloatingNav() {
     </>
   );
 }
+
 

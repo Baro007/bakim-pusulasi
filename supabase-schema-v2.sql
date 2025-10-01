@@ -318,3 +318,4 @@ COMMENT ON VIEW mental_health_correlations IS 'Mental sağlık ve bakım yükü 
 -- 4. Update frontend code to use new fields
 
 
+
