@@ -1435,39 +1435,113 @@ function ZBISection({
   const question = zaritQuestions[currentQuestion];
   const currentAnswer = answers[currentQuestion];
 
+  // Haptic feedback on mobile
+  const triggerHaptic = () => {
+    if ('vibrate' in navigator) {
+      navigator.vibrate(10); // Quick tap feedback
+    }
+  };
+
+  // Auto-advance with delay
+  const handleAnswer = (value: number) => {
+    triggerHaptic();
+    onAnswer(value);
+    
+    // Auto-advance after 600ms (Instagram-style)
+    setTimeout(() => {
+      if ('vibrate' in navigator) {
+        navigator.vibrate([10, 50, 10]); // Success pattern
+      }
+    }, 600);
+  };
+
+  // Emoji mapping for ZBI scores (0-4)
+  const getEmoji = (value: number) => {
+    const emojis = ['😊', '😐', '😟', '😰', '😭'];
+    return emojis[value] || '😐';
+  };
+
   return (
     <motion.div
       key={currentQuestion}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
+      initial={{ opacity: 0, x: 50 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0, x: -50 }}
+      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
       className="space-y-6"
     >
-      <div className="text-center mb-8">
-        <ClipboardDocumentCheckIcon className="w-20 h-20 mx-auto text-blue-600 mb-4" />
-        <h2 className="text-3xl font-bold text-gray-900 mb-2">Bölüm C: Duygularınız</h2>
-        <p className="text-lg text-gray-600">
-          Soru {currentQuestion + 1} / 12
-        </p>
+      {/* Instagram-Style Progress Dots */}
+      <div className="flex justify-center gap-1.5 mb-6">
+        {zaritQuestions.map((_, index) => (
+          <motion.div
+            key={index}
+            className={`h-1 rounded-full transition-all duration-300 ${
+              index < currentQuestion
+                ? 'w-8 bg-gradient-to-r from-teal-500 to-blue-500' // Completed
+                : index === currentQuestion
+                ? 'w-12 bg-gradient-to-r from-blue-500 to-purple-500' // Current
+                : 'w-4 bg-gray-300' // Upcoming
+            }`}
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: index * 0.05 }}
+          />
+        ))}
       </div>
 
-      <div className="bg-white rounded-2xl p-6 shadow-lg border-2 border-blue-200">
-        <p className="text-2xl font-medium text-gray-900 leading-relaxed mb-8">{question.text}</p>
+      {/* Minimalist Header */}
+      <div className="text-center mb-6">
+        <motion.p 
+          className="text-sm font-semibold text-gray-500 mb-2"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          Soru {currentQuestion + 1} / {zaritQuestions.length}
+        </motion.p>
+      </div>
 
-        <div className="space-y-3">
-          {question.options.map((option) => (
-            <button
+      {/* Story-Style Question Card */}
+      <motion.div 
+        className="bg-white/90 backdrop-blur-md rounded-3xl p-8 shadow-2xl border border-gray-200"
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ delay: 0.1 }}
+      >
+        <p className="text-2xl md:text-3xl font-bold text-gray-900 leading-relaxed mb-10 text-center">
+          {question.text}
+        </p>
+
+        {/* Swipeable Options with Emojis */}
+        <div className="space-y-4">
+          {question.options.map((option, index) => (
+            <motion.button
               key={option.value}
-              onClick={() => onAnswer(option.value)}
+              onClick={() => handleAnswer(option.value)}
               className={`btn-option-zbi ${currentAnswer === option.value ? 'active' : ''}`}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.1 }}
+              whileHover={{ scale: 1.02, x: 4 }}
+              whileTap={{ scale: 0.98 }}
             >
-              <CheckCircleIcon
-                className={`w-6 h-6 mr-3 ${
-                  currentAnswer === option.value ? 'text-white' : 'text-gray-400'
-                }`}
-              />
-              <span className="text-xl">{option.label}</span>
-            </button>
+              {/* Emoji */}
+              <span className="text-3xl mr-4">{getEmoji(option.value)}</span>
+              
+              {/* Label */}
+              <span className="text-xl font-semibold flex-1 text-left">{option.label}</span>
+              
+              {/* Checkmark */}
+              {currentAnswer === option.value && (
+                <motion.div
+                  initial={{ scale: 0, rotate: -180 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ type: 'spring', stiffness: 500 }}
+                  className="ml-auto"
+                >
+                  <CheckCircleIcon className="w-8 h-8 text-white" />
+                </motion.div>
+              )}
+            </motion.button>
           ))}
         </div>
       </div>
