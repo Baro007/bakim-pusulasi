@@ -215,21 +215,35 @@ export default function Home() {
         </div>
       </section>
 
-      {/* İstatistikler */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* İstatistikler - Enhanced with 3D Cards */}
+      <section className="py-20 bg-gradient-to-br from-white to-gray-50 relative overflow-hidden">
+        {/* Subtle background pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `radial-gradient(circle at 2px 2px, #0d9488 1px, transparent 0)`,
+            backgroundSize: '40px 40px'
+          }} />
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div 
-            className="text-center mb-12"
+            className="text-center mb-16"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl font-bold text-gray-800 mb-4">
+            <motion.h2 
+              className="text-4xl md:text-5xl font-black text-gray-900 mb-4 bg-clip-text text-transparent bg-gradient-to-r from-gray-900 via-teal-800 to-gray-900"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+            >
               Görünmez Hastalar: Bakım Verenler
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Bakım verenlerin karşılaştığı zorluklar ve bu zorluklara yönelik çözümlerimiz
+            </motion.h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              Bakım verenlerin karşılaştığı zorluklar ve bu zorluklara yönelik <span className="font-bold text-teal-600">bilimsel çözümlerimiz</span>
             </p>
           </motion.div>
 
@@ -237,57 +251,207 @@ export default function Home() {
             {stats.map((stat, index) => (
               <motion.div
                 key={index}
-                className="text-center p-6 bg-gray-50 rounded-xl"
-                initial={{ opacity: 0, y: 40 }}
+                className="group relative"
+                initial={{ opacity: 0, y: 60 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
+                transition={{ 
+                  duration: 0.6, 
+                  delay: index * 0.15,
+                  type: 'spring',
+                  stiffness: 100
+                }}
                 viewport={{ once: true }}
+                whileHover={{ y: -10 }}
               >
-                <div className="text-4xl font-bold text-teal-600 mb-2">{stat.value}</div>
-                <div className="text-lg font-semibold text-gray-800 mb-2">{stat.label}</div>
-                <div className="text-sm text-gray-600">{stat.description}</div>
+                {/* 3D Card with glassmorphism */}
+                <div className="relative h-full p-8 bg-white/80 backdrop-blur-md rounded-3xl border-2 border-gray-100 shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden">
+                  {/* Gradient accent */}
+                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-teal-500 via-blue-500 to-purple-500" />
+                  
+                  {/* Animated background on hover */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-teal-50/50 to-blue-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  
+                  <div className="relative z-10 text-center">
+                    {/* Animated stat value */}
+                    <motion.div 
+                      className="text-5xl md:text-6xl font-black bg-clip-text text-transparent bg-gradient-to-r from-teal-600 to-blue-600 mb-3"
+                      initial={{ scale: 0.5, opacity: 0 }}
+                      whileInView={{ scale: 1, opacity: 1 }}
+                      transition={{ 
+                        duration: 0.8, 
+                        delay: index * 0.15 + 0.3,
+                        type: 'spring',
+                        stiffness: 200
+                      }}
+                      viewport={{ once: true }}
+                    >
+                      {stat.value}
+                    </motion.div>
+                    
+                    <div className="text-xl font-bold text-gray-900 mb-3">
+                      {stat.label}
+                    </div>
+                    
+                    <div className="text-sm text-gray-600 leading-relaxed">
+                      {stat.description}
+                    </div>
+                  </div>
+
+                  {/* Corner accent */}
+                  <div className="absolute bottom-0 right-0 w-24 h-24 bg-gradient-to-tl from-teal-500/10 to-transparent rounded-tl-full" />
+                </div>
               </motion.div>
             ))}
           </div>
+
+          {/* CTA for more stats */}
+          <motion.div
+            className="mt-12 text-center"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            viewport={{ once: true }}
+          >
+            <Link href="/istatistikler">
+              <motion.button
+                whileHover={{ scale: 1.05, y: -3 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-8 py-4 bg-white/90 backdrop-blur-md border-2 border-teal-200 rounded-2xl font-bold text-teal-700 hover:border-teal-400 hover:shadow-xl transition-all inline-flex items-center gap-2"
+              >
+                <ChartBarIcon className="w-5 h-5" />
+                Detaylı Araştırma Verilerini İnceleyin
+              </motion.button>
+            </Link>
+          </motion.div>
         </div>
       </section>
 
-      {/* Özellikler */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Özellikler - 3D Interactive Cards */}
+      <section className="py-20 bg-gradient-to-br from-gray-50 to-white relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div 
-            className="text-center mb-12"
+            className="text-center mb-16"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl font-bold text-gray-800 mb-4">
-              3 Aşamalı Destek Modeli
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Neredeyiz? Ne yapacağız? Nasıl destek alacağız?
+            <motion.h2 
+              className="text-4xl md:text-5xl font-black text-gray-900 mb-4"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+            >
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-teal-600 to-blue-600">
+                3 Aşamalı
+              </span>{' '}
+              Destek Modeli
+            </motion.h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              <span className="font-bold text-blue-600">Neredeyiz?</span> · 
+              <span className="font-bold text-teal-600 mx-2">Ne yapacağız?</span> · 
+              <span className="font-bold text-purple-600">Nasıl destek alacağız?</span>
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-              >
-                <Card
-                  title={feature.title}
-                  description={feature.description}
-                  icon={feature.icon}
-                  hoverable
-                />
-              </motion.div>
-            ))}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            {features.map((feature, index) => {
+              const Icon = feature.icon;
+              const gradients = [
+                'from-teal-500 to-blue-500',
+                'from-blue-500 to-purple-500',
+                'from-purple-500 to-pink-500'
+              ];
+              
+              return (
+                <motion.div
+                  key={index}
+                  className="group"
+                  initial={{ opacity: 0, y: 60, rotateX: -15 }}
+                  whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+                  transition={{ 
+                    duration: 0.8, 
+                    delay: index * 0.2,
+                    type: 'spring',
+                    stiffness: 100
+                  }}
+                  viewport={{ once: true }}
+                  whileHover={{ y: -15, scale: 1.02 }}
+                  style={{ perspective: 1000 }}
+                >
+                  {/* 3D Card Container */}
+                  <div className="relative h-full p-8 bg-white rounded-3xl border-2 border-gray-100 shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden">
+                    {/* Gradient top accent */}
+                    <div className={`absolute top-0 left-0 right-0 h-2 bg-gradient-to-r ${gradients[index]}`} />
+                    
+                    {/* Icon with animated gradient background */}
+                    <motion.div
+                      className="relative mb-6"
+                      initial={{ scale: 0 }}
+                      whileInView={{ scale: 1 }}
+                      transition={{ 
+                        duration: 0.6, 
+                        delay: index * 0.2 + 0.3,
+                        type: 'spring',
+                        stiffness: 200
+                      }}
+                      viewport={{ once: true }}
+                    >
+                      <div className={`w-20 h-20 mx-auto rounded-2xl bg-gradient-to-br ${gradients[index]} p-4 shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110`}>
+                        <Icon className="w-full h-full text-white" />
+                      </div>
+                    </motion.div>
+
+                    {/* Content */}
+                    <div className="text-center relative z-10">
+                      <h3 className="text-2xl font-black text-gray-900 mb-4 group-hover:text-teal-600 transition-colors">
+                        {feature.title}
+                      </h3>
+                      <p className="text-gray-600 leading-relaxed">
+                        {feature.description}
+                      </p>
+                    </div>
+
+                    {/* Hover effect background */}
+                    <div className={`absolute inset-0 bg-gradient-to-br ${gradients[index]} opacity-0 group-hover:opacity-5 transition-opacity duration-500`} />
+                    
+                    {/* Number indicator */}
+                    <div className="absolute top-8 right-8 w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center font-black text-2xl text-gray-300 group-hover:text-teal-500 transition-colors">
+                      {index + 1}
+                    </div>
+
+                    {/* Bottom corner decoration */}
+                    <div className="absolute bottom-0 left-0 w-32 h-32 opacity-5">
+                      <Icon className="w-full h-full text-gray-900 transform rotate-12" />
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
+
+          {/* Additional CTA */}
+          <motion.div
+            className="mt-16 text-center"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.8 }}
+            viewport={{ once: true }}
+          >
+            <p className="text-lg text-gray-600 mb-6">
+              Her adımda size özel, kanıta dayalı rehberlik
+            </p>
+            <Link href="/tanilama">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-10 py-5 bg-gradient-to-r from-teal-600 to-blue-600 text-white font-bold text-lg rounded-2xl shadow-xl hover:shadow-2xl transition-all"
+              >
+                Hemen Değerlendirme Başlat
+              </motion.button>
+            </Link>
+          </motion.div>
         </div>
       </section>
 
@@ -343,5 +507,4 @@ export default function Home() {
       </section>
     </div>
   );
-}
 }
