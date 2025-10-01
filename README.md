@@ -211,10 +211,12 @@ of this software and associated documentation files...
 
 ## 👥 Ekip ve Teşekkürler
 
-### Proje Ekibi
-- **Proje Lideri**: Dr. Sadık Barış Adıgüzel
-- **Geliştirici**: AI-assisted development
-- **Bilimsel Danışman**: Bakım araştırması uzmanları
+### Proje Ekipi
+- **Proje Lideri & Geliştirici**: Dr. Sadık Barış Adıgüzel
+  - Arş. Gör. Dr., Sağlık Bilimleri Üniversitesi Antalya Eğitim ve Araştırma Hastanesi
+  - Aile Hekimliği Anabilim Dalı, Antalya, Türkiye
+- **Danışman**: Doç. Dr. Mehmet Özen
+- **Sunum**: VII. Uluslararası Evde Sağlık ve Sosyal Hizmetler Kongresi (13-16 Kasım 2025, Ankara)
 
 ### Teşekkürler
 - Türkiye Alzheimer Derneği
@@ -227,9 +229,9 @@ of this software and associated documentation files...
 ## 📞 İletişim
 
 - **Web**: https://bakimpusulasi.netlify.app
-- **GitHub**: [https://github.com/bakim-pusulasi](https://github.com/Baro007/bakim-pusulasi)
-- **E-posta**: sadikbarisadiguzel@gmail.com
-- **Twitter**: 
+- **GitHub**: https://github.com/Baro007/bakim-pusulasi
+- **Geliştirici**: https://sadikbarisadiguzel.com/
+- **E-posta**: sadikbarisadiguzel@gmail.com 
 
 ---
 
