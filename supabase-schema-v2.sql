@@ -319,3 +319,5 @@ COMMENT ON VIEW mental_health_correlations IS 'Mental sağlık ve bakım yükü 
 
 
 
+
+

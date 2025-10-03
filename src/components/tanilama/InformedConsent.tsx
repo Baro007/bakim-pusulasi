@@ -194,3 +194,5 @@ export default function InformedConsent({ onAccept }: InformedConsentProps) {
 
 
 
+
+

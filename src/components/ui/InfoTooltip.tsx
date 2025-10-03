@@ -47,3 +47,5 @@ export default function InfoTooltip({ text, className = '' }: InfoTooltipProps) 
   );
 }
 
+
+
